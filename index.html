@@ -1,0 +1,2165 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ইলেকট্রনিক প্রেসক্রিপশন সিস্টেম</title>
+
+<style>
+  body {
+    font-family: 'Kalpurush', Arial, sans-serif;
+    margin: 0; padding: 0;
+    background: #f5f9fc;
+    color: #333;
+  }
+
+  header {
+    background: linear-gradient(90deg, #0c9444, #28a745);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .header-left img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .header-left img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  }
+
+  .header-left h1 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .header-left span {
+    font-size: 10px;
+    font-weight: 400;
+    display: block;
+  }
+
+  .header-buttons button {
+    background: #ff4757;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 10px;
+    transition: background 0.3s ease;
+    margin-left: 10px;
+  }
+
+  .header-buttons button:hover {
+    background: #ff6b81;
+  }
+
+  .container {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .left-form {
+    width: 30%;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    overflow-y: auto;
+    max-height: 85vh;
+    transition: all 0.3s ease;
+  }
+
+  .left-form h2 {
+    margin-top: 0; 
+    font-size: 1.4rem;
+    border-left: 5px solid #28a745;
+    padding-left: 12px;
+    margin-bottom: 18px;
+    color: #006400;
+    letter-spacing: 0.5px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555;
+  }
+
+  .form-group input, 
+  .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fefefe;
+    transition: border 0.3s ease;
+  }
+
+  .form-group input:focus, 
+  .form-group select:focus {
+    border-color: #28a745;
+    outline: none;
+  }
+
+  .right-form {
+    width: 70%;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .buttons-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+
+  .buttons-row button {
+    background: #28a745;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 14px;
+  }
+
+  .buttons-row button:hover {
+    background: #218838;
+  }
+
+  #prescriptionOutput {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    padding: 18px 20px 70px 20px;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 10px;
+    position: relative;
+    min-height: 950px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+  }
+
+  #prescriptionOutput .header-section {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  #prescriptionOutput .header-section .left,
+  #prescriptionOutput .header-section .right {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    color: #006400;
+  }
+
+  #prescriptionOutput .section-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  #prescriptionOutput .section-box {
+    flex: 1;
+  }
+
+  #prescriptionOutput .medicines table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  #prescriptionOutput .medicines th, 
+  #prescriptionOutput .medicines td {
+    border: 1px solid #bbb;
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  #prescriptionOutput .medicines th {
+    background: #28a745;
+    color: white;
+  }
+
+  #prescriptionOutput .signature {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    border-top: 2px solid #006400;
+    padding-top: 10px;
+    text-align: right;
+    width: 250px;
+    line-height: 1.4;
+    color: #444;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #28a745;
+    border-radius: 10px;
+  }
+
+  @media(max-width: 900px) {
+    .container {
+      flex-direction: column;
+    }
+    .left-form, .right-form {
+      width: 100%;
+      max-height: none;
+    }
+  }
+</style>
+
+</head>
+<body>
+<script>
+  // Right click disable
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable common developer shortcuts
+  document.onkeydown = function (e) {
+    if (
+      e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'U' || e.key === 'S') || // Ctrl+U, Ctrl+S
+      e.key === 'F12' || // F12
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) // Ctrl+Shift+I, etc.
+    ) {
+      return false;
+    }
+  };
+</script>
+
+<header>
+  <button id="btnAppointment">Appointment</button>
+  <button id="btnPrescription">Prescription</button>
+  <header style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px;">
+  <h1 style="font-weight: bold; font-size: 32px; margin: 0; color: white; margin-right: 15px;">
+    Md. Farhad Hossain- Department Of Pharmachy
+  </h1>
+  <img src="images/farhad.png" alt="Farhad" style="height: 50px; object-fit: contain;">
+</header>
+</header>
+
+<div class="container">
+
+  <!-- Left form (Patient Info) -->
+  <div class="left-form" id="leftForm">
+  <h2>Patient Information</h2>
+  <form id="patientForm">
+    <div class="form-group">
+      <label for="pId">Patient ID</label>
+      <input type="text" id="pId" readonly />
+    </div>
+      <div class="form-group">
+        <label for="pName">Name <span style="color:red;">*</span></label>
+        <input type="text" id="pName" required />
+      </div>
+      <div class="form-group">
+        <label for="pAge">Age <span style="color:red;">*</span></label>
+        <input type="number" id="pAge" min="0" max="150" required />
+      </div>
+      <div class="form-group">
+        <label for="pPhone">Phone Number</label>
+        <input type="tel" id="pPhone" />
+      </div>
+      <div class="form-group">
+        <label for="pGender">Gender</label>
+        <select id="pGender">
+          <option value="">-- নির্বাচন করুন --</option>
+          <option value="পুরুষ">পুরুষ</option>
+          <option value="মহিলা">মহিলা</option>
+          <option value="অন্যান্য">অন্যান্য</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pAddress">Address</label>
+        <input type="text" id="pAddress" />
+      </div>
+      <div class="form-group">
+        <label for="pDate">Date</label>
+        <input type="date" id="pDate" />
+      </div>
+      <div class="form-group">
+        <label for="pDistrict">District</label>
+        <select id="pDistrict"></select>
+      </div>
+      <div class="form-group">
+        <label for="pThana">Thana</label>
+        <select id="pThana"></select>
+      </div>
+      <div class="form-group">
+        <label for="pImage">Upload Image</label>
+        <input type="file" id="pImage" accept="image/*" />
+      </div>
+      <div class="form-group">
+        <label for="pEmail">Email</label>
+        <input type="email" id="pEmail" />
+      </div>
+      <div class="form-group">
+        <label for="pRefBy">Reference By Name</label>
+        <input type="text" id="pRefBy" />
+      </div>
+      <div class="form-group">
+        <label for="pTime">Time</label>
+        <input type="text" id="pTime" readonly />
+      </div>
+      <button type="submit" style="background:#28a745;color:white;padding:10px 15px;border:none;border-radius:4px;cursor:pointer;">Submit</button>
+	  <button type="button" id="clearPatientForm" style="background:#dc3545;color:white;padding:10px 15px;border:none;border-radius:4px;cursor:pointer;margin-right:10px;">Clear</button>
+
+    </form>
+  </div>
+
+  <!-- Right form (Prescription and others) -->
+  <div class="right-form">
+    <div class="buttons-row">
+      <button id="btnPrint" title="প্রেসক্রিপশন প্রিন্ট">Print Prescription</button>
+      <button id="btnHistory" title="History">Patients History</button>
+      <button class="btnAddCO">C/O</button>
+      <button class="btnAddHO">H/O</button>
+      <button class="btnAddOE">O/E</button>
+      <button class="btnAddDiagnosis">Diagnosis</button>
+      <button class="btnAddInvestigation">Investigation</button>
+      <button class="btnAddAdvice">Advice</button>
+      <button class="btnAddUpodesh">উপদেশ</button>
+      <button class="btnAddNextVisit">Visit</button>
+      <button class="btnAddReferTo">Refer</button>
+      <button id="btnSaveAll" style="margin-left:auto;background:#006400;">Save</button>
+    </div>
+
+    <div id="prescriptionOutput">
+      <!-- Prescription Preview will be rendered here -->
+    </div>
+<!-- History Button -->
+<button id="btnHistory" style="margin:10px;">History দেখুন</button>
+
+<!-- History Section (Initially hidden) -->
+<div id="historySection" style="display:none; margin-top:20px; border:1px solid #ccc; padding:10px; max-width:700px;">
+  <div style="margin-bottom:10px;">
+    <input type="text" id="historySearchInput" placeholder="রোগীর নাম লিখুন..." style="padding:6px; width: 250px;" />
+    <button id="historySearchBtn" style="padding:6px 10px; background:#006400; color:white; border:none; border-radius:4px;">Search</button>
+    <button id="historyClearBtn" style="padding:6px 10px; background:#dc3545; color:white; border:none; border-radius:4px;">Clear</button>
+    <button id="closeHistory" style="float:right; padding:6px 12px; background:#888; color:white; border:none; border-radius:4px; cursor:pointer;">Close</button>
+  </div>
+  <h3>Patients History Report</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background:#eee;">
+        <th style="padding:8px; border:1px solid #ccc;">নাম</th>
+        <th style="padding:8px; border:1px solid #ccc;">বয়স</th>
+        <th style="padding:8px; border:1px solid #ccc;">তারিখ</th>
+        <th style="padding:8px; border:1px solid #ccc;">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="historyBody"></tbody>
+  </table>
+</div>
+
+    <!-- History Table (Initially hidden) -->
+    <div id="historySection" style="display:none; margin-top:10px;">
+	<div style="margin: 8px 0;">
+  <input type="text" id="historySearchInput" placeholder="রোগীর নাম লিখুন..." style="padding:6px; width: 200px;" />
+  <button id="historySearchBtn" style="padding:6px 10px; background:#006400; color:white; border:none; border-radius:4px;">Search</button>
+  <button id="historyClearBtn" style="padding:6px 10px; background:#dc3545; color:white; border:none; border-radius:4px;">Clear</button>
+</div>
+      <h3>Patients History Repot</h3>
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>নাম</th>
+            <th>বয়স</th>
+            <th>তারিখ</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+      <button id="closeHistory" style="margin-top:10px;background:#dc3545;color:white;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;">Close History</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modals for Add/Edit items -->
+<div id="modalContainer" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;">
+  <div style="background:white;padding:20px;border-radius:8px;min-width:320px;max-width:90vw;max-height:90vh;overflow-y:auto;">
+    <h3 id="modalTitle"></h3>
+    <div id="modalContent"></div>
+    <div style="margin-top:12px; text-align:right;">
+      <button id="modalCancel" style="background:#dc3545;color:white;padding:6px 14px;border:none;border-radius:4px;cursor:pointer;margin-right:8px;">Cancel</button>
+      <button id="modalSave" style="background:#28a745;color:white;padding:6px 14px;border:none;border-radius:4px;cursor:pointer;">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const medicineDatabase = {
+
+'Thalamia': { strenth: 'Capsule', generic: 'Thalidomide 50 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Femroz': { strenth: 'Tablet', generic: 'Letrozole 2.5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Erdafixen 3': { strenth: 'Tablet', generic: 'Erdafitinib 3 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Adakras': { strenth: 'Tablet', generic: 'Adagrasib 200 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Liposem Tablet': { strenth: 'Tablet', generic: 'Saroglitazar 2 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Talaparib Capsule': { strenth: 'Capsule', generic: 'Talazoparib 1 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Alvet': { strenth: 'Bolus', generic: 'Albendazole 600 mg', dose: '১ ডোজ', duration: 'একবার', remark: 'প্রয়োজনে পুনরায় নেবেন।' },
+  'Antibac': { strenth: 'Bolus', generic: 'Oxytetracycline 500 mg', dose: '১ ডোজ', duration: 'একবার', remark: 'প্রয়োজনে পুনরায় নেবেন।' },
+  'Antibac P': { strenth: 'Bolus', generic: 'Oxytetracycline 500 mg', dose: '১ ডোজ', duration: 'একবার', remark: 'প্রয়োজনে পুনরায় নেবেন।' },
+  'AxF PLUS 20%': { strenth: 'Powder', generic: 'Amoxicillin 20%', dose: 'নির্দিষ্ট ডোজ', duration: 'প্রয়োজনে', remark: 'প্রয়োজনে ব্যবহার করুন।' },
+  'Cfcin Vet': { strenth: 'Powder', generic: 'Ciprofloxacin 10%', dose: 'নির্দিষ্ট ডোজ', duration: 'প্রয়োজনে', remark: 'প্রয়োজনে ব্যবহার করুন।' },
+  'Lezol': { strenth: 'Bolus', generic: 'Levamisole + Triclabendazole 600 mg + 900 mg', dose: '১ ডোজ', duration: 'একবার', remark: 'প্রয়োজনে পুনরায় নেবেন।' },
+  'Niclovet': { strenth: 'Bolus', generic: 'Niclosamide 1 gm', dose: '১ ডোজ', duration: 'একবার', remark: 'প্রয়োজনে পুনরায় নেবেন।' },
+  'Paravet': { strenth: 'Bolus', generic: 'Paracetamol 2 gm', dose: '১ ডোজ', duration: 'প্রয়োজনে', remark: 'জ্বর ও ব্যথার জন্য।' },
+  'Promevet': { strenth: 'Bolus', generic: 'Promethazine Hydrochloride 150 mg', dose: '১ ডোজ', duration: 'প্রয়োজনে', remark: 'অ্যালার্জির জন্য।' },
+  'Rumenal': { strenth: 'Sachet', generic: 'Amonium Bicarbonate + Gentian Violet + Ginger + Nux vomica + Sodium Bicarbonate 25 gm + 1.5 gm + 1.5 gm + 7 gm + 65 gm/100 gm', dose: '১-২ স্যাচেট', duration: '৭ দিন', remark: 'খাবারের পরে সেবন।' },
+  'Safvet': { strenth: 'Bolus', generic: 'Fenbendazole 250 mg', dose: '১ ডোজ', duration: 'একবার', remark: 'পরজীবী নিয়ন্ত্রণের জন্য।' },
+'Hifolic': { strenth: 'Tablet', generic: 'Folinic Acid 5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Florest': { strenth: 'Extended Release Capsule', generic: 'Fluvoxamine Maleate 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Alkixen': { strenth: 'Capsule', generic: 'Crizotinib 250 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Alpesib': { strenth: 'Tablet', generic: 'Alpelisib 150 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Ivosenib': { strenth: 'Tablet', generic: 'Ivosidenib 250 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Dotiric 1': { strenth: 'Tablet', generic: 'Dotinurad 1 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Dotiric 2': { strenth: 'Tablet', generic: 'Dotinurad 2 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Gabafix 2.5': { strenth: 'Tablet', generic: 'Mirogabalin 2.5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Gabafix 5': { strenth: 'Tablet', generic: 'Mirogabalin 5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Gabafix 10': { strenth: 'Tablet', generic: 'Mirogabalin 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Erdafixen': { strenth: 'Tablet', generic: 'Erdafitinib 4 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Desixen 250 Dispersible': { strenth: 'Tablet', generic: 'Deferasirox 250 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Desixen 500': { strenth: 'Tablet', generic: 'Deferasirox 500 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Olatix': { strenth: 'Tablet', generic: 'Olopatadine 5 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Cenomate 12.5': { strenth: 'Tablet', generic: 'Cenobamate 12.5 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Cenomate 500': { strenth: 'Tablet', generic: 'Cenobamate 50 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Fineron 20': { strenth: 'Tablet', generic: 'Finerenone 20 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Adimod 800': { strenth: 'Tablet', generic: 'Pidotimod 800 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Renofix 100': { strenth: 'Tablet', generic: 'Roxadustat 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Environ': { strenth: 'Capsule', generic: 'Ferric Maltol 30 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Pazorest': { strenth: 'Tablet', generic: 'Pazopanib 200 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Semaxen 3': { strenth: 'Tablet', generic: 'Semaglutide 3 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Semaxen 7': { strenth: 'Tablet', generic: 'Semaglutide 7 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Ascimib': { strenth: 'Tablet', generic: 'Asciminib 40 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Rosero': { strenth: 'Tablet', generic: 'Ramosetron Hydrochloride 2.5 mcg', dose: '১+০+০', duration: '৭ দিন', remark: 'খাবারের পরে নেবেন।' },
+  'Image 500': { strenth: 'Tablet', generic: 'Imeglimin Hydrochloride 500 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Glyptiva 12.5': { strenth: 'Tablet', generic: 'Omarigliptin 12.5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Glyptiva 25': { strenth: 'Tablet', generic: 'Omarigliptin 25 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Roxovast 20': { strenth: 'Tablet', generic: 'Rosuvastatin 20 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Rexovast 40': { strenth: 'Tablet', generic: 'Rosuvastatin 40 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+ 'Hepapann Tablet': { strenth: 'Tablet', generic: 'L-Ornithine L-Aspartate + Pancreatin 150 mg + 100 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের পরে সেবন।' },
+  'Capmaxen Tablet': { strenth: 'Tablet', generic: 'Capmatibin 200 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Trifluxen': { strenth: 'Tablet', generic: 'Tipiracil + Trifluridine 6.14 mg + 15 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'রাতে নেবেন।' },
+  'Azarest': { strenth: 'Tablet', generic: 'Azacitidine 300 mg', dose: '১+০+০', duration: '১৪ দিন', remark: 'ডাক্তারের পরামর্শ মোতাবেক।' },
+  'Gefan': { strenth: 'Tablet', generic: 'Gefapixant 45 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Tardivex': { strenth: 'Capsule', generic: 'Valbenazine 40 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Daprostat-1': { strenth: 'Tablet', generic: 'Daprodustat 1 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Vonosil 20': { strenth: 'Tablet', generic: 'Vonoprazan 20 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Vonosil 10': { strenth: 'Tablet', generic: 'Vonoprazan 10 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Rexovast 5': { strenth: 'Tablet', generic: 'Rosuvastatin 5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Rexovast 10': { strenth: 'Tablet', generic: 'Rosuvastatin 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Terbixen': { strenth: 'Cream', generic: 'Terbinafine 1 gm/100 gm', dose: 'দিনে ২ বার', duration: '১৪ দিন', remark: 'আবেদন করবেন আক্রান্ত স্থানে।' },
+  'Sulpride 100': { strenth: 'Tablet', generic: 'Amisulpride 100 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Sulpride 200': { strenth: 'Tablet', generic: 'Amisulpride 200 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Escirest 5': { strenth: 'Tablet', generic: 'Escitalopram 5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Escirest 10': { strenth: 'Tablet', generic: 'Escitalopram 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Hexirest 1': { strenth: 'Tablet', generic: 'Trihexyphenidyl Hydrochloride 1 mg', dose: '১+১+১', duration: '২০ দিন', remark: 'খাবারের পরে।' },
+  'Revlixen 10': { strenth: 'Capsule', generic: 'Lenalidomide 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Revlixen 25': { strenth: 'Capsule', generic: 'Lenalidomide 25 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Vortixen 5': { strenth: 'Tablet', generic: 'Vortioxetine 5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Vortixen 10': { strenth: 'Tablet', generic: 'Vortioxetine 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Myoflex': { strenth: 'Tablet', generic: 'Pridinol 3 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Dotiric Tablet': { strenth: 'Tablet', generic: 'Dotinurad 500 mcg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Cenomate Tablet': { strenth: 'Tablet', generic: 'Cenobamate 100 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Udiliva 150': { strenth: 'Tablet', generic: 'Ursodeoxycholic Acid 150 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Udiliva 300': { strenth: 'Tablet', generic: 'Ursodeoxycholic Acid 300 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Abiraxen': { strenth: 'Tablet', generic: 'Abiraterone Acetate 250 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Hydrea': { strenth: 'Capsule', generic: 'Hydroxyurea 500 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+'Selinex': { strenth: 'Tablet', generic: 'Selinexor 20 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে সেবন।' },
+  'Nafinex Cream': { strenth: 'Cream', generic: 'Naftifine Hydrochloride 2 gm/100 gm', dose: 'দিনে ২ বার', duration: '১৪ দিন', remark: 'আবেদন করবেন আক্রান্ত স্থানে।' },
+  'Amonex Cream': { strenth: 'Cream', generic: 'Amorolfine Hydrochloride 250 mg/100 gm', dose: 'সপ্তাহে ২ বার', duration: '৩০ দিন', remark: 'আবেদন করবেন আক্রান্ত স্থানে।' },
+  'Lulifast': { strenth: 'Cream', generic: 'Luliconazole 10 mg/gm', dose: 'দিনে ১ বার', duration: '১৪ দিন', remark: 'আবেদন করবেন আক্রান্ত স্থানে।' },
+  'Bilxen Syrup': { strenth: 'Syrup', generic: 'Bilastine 12.5 mg/5 ml', dose: '১ চামচ', duration: '১০ দিন', remark: 'খাবারের পরে।' },
+  'Acaluxen': { strenth: 'Capsule', generic: 'Acalabrutinib 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Renofix 20': { strenth: 'Tablet', generic: 'Roxadustat 20 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Renofix 50': { strenth: 'Tablet', generic: 'Roxadustat 50 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Flosure': { strenth: 'Tablet', generic: 'Tamsulosin Hydrochloride 400 mcg', dose: '১+০+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Empoli 10': { strenth: 'Tablet', generic: 'Empagliflozin 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Empoli 25': { strenth: 'Tablet', generic: 'Empagliflozin 25 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Candifast': { strenth: 'Capsule', generic: 'Itraconazole 100 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Daprodustat': { strenth: 'Tablet', generic: 'Daprodustat 2 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Daprostat- 4': { strenth: 'Tablet', generic: 'Daprodustat 4 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Daprostat-6': { strenth: 'Tablet', generic: 'Daprodustat 6 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Itokine': { strenth: 'Tablet', generic: 'Itopride Hydrochloride 50 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Ventoxen 10': { strenth: 'Tablet', generic: 'Venetoclax 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Candifast SB': { strenth: 'Capsule', generic: 'Itraconazole 65 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Calupros': { strenth: 'Tablet', generic: 'Bicalutamide 50 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Cravacin': { strenth: 'Tablet', generic: 'Deucravacitinib 6 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Renofix 70': { strenth: 'Tablet', generic: 'Roxadustat 70 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Rulifast Cream': { strenth: 'Cream', generic: 'Ruxolitinib 1.5 gm/100 gm', dose: 'দিনে ২ বার', duration: '১৪ দিন', remark: 'আবেদন করবেন আক্রান্ত স্থানে।' },
+  'Panzest 25000 Capusle': { strenth: 'Capsule', generic: 'Pancreatin 300 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Adimod': { strenth: 'Tablet', generic: 'Pidotimod 400 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'খাবারের পরে।' },
+  'Ticfree Tablet': { strenth: 'Tablet', generic: 'Tetrabenazine 12.5 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'IMAXEN 100': { strenth: 'Tablet', generic: 'Imatinib 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'XELOSIL ORAL': { strenth: 'Suspension', generic: 'Calcium Carbonate + Sodium Alginate + Sodium Bicarbonate 3.25 gm + 5 gm + 2.13 gm/100 ml', dose: '২ চামচ', duration: '১৪ দিন', remark: 'খাবারের আগে।' },
+  'Imaxen 400': { strenth: 'Tablet', generic: 'Imatinib 400 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Q-Fit 25': { strenth: 'Tablet', generic: 'Quetiapine 25 mg', dose: '০+১+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Q-Fit 100': { strenth: 'Tablet', generic: 'Quetiapine 100 mg', dose: '১+১+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Q-Fit XR 50': { strenth: 'Xr Tablet', generic: 'Quetiapine 50 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'সন্ধ্যায় নেবেন।' },
+  'Serofit 25': { strenth: 'Tablet', generic: 'Sertraline 25 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Serofit 50': { strenth: 'Tablet', generic: 'Sertraline 50 mg', dose: '১+১+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Risofit 2': { strenth: 'Tablet', generic: 'Risperidone 2 mg', dose: '০+১+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Risofit 4': { strenth: 'Tablet', generic: 'Risperidone 4 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Hexirest 2': { strenth: 'Tablet', generic: 'Trihexyphenidyl Hydrochloride 2 mg', dose: '১+১+১', duration: '২০ দিন', remark: 'খাবারের পরে।' },
+  'Hexirest 5': { strenth: 'Tablet', generic: 'Trihexyphenidyl Hydrochloride 5 mg', dose: '১+১+০', duration: '২০ দিন', remark: 'খাবারের পরে।' },
+  'Calcixen Max': { strenth: 'Tablet', generic: 'Calcium (Coral Calcium) + Vitamin D3 600 mg + 400 IU', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Renocal Plus': { strenth: 'Tablet', generic: 'Calcium + Magnesium 110 mg + 60 mg', dose: '১+১+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Olixar 20': { strenth: 'Tablet', generic: 'Olanzapine 20 mg', dose: '০+১+০', duration: '১৫ দিন', remark: 'রাতে নেবেন।' },
+  'Fineron 10': { strenth: 'Tablet', generic: 'Finerenone 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Tivoxen': { strenth: 'Capsule', generic: 'Tivozanib Hydrochloride 1.5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খালি পেটে নেবেন।' },
+  'Egshel-D': { strenth: 'Tablet', generic: 'Calcium (Eggshell Source) + Vitamin D3 500 mg + 200 IU', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Egshel-DX': { strenth: 'Tablet', generic: 'Calcium (Eggshell Source) + Vitamin D3 600 mg + 400 IU', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Daconib 45': { strenth: 'Tablet', generic: 'Dacomitinib 45 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Sotoxen': { strenth: 'Tablet', generic: 'Sotorasib 120 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে সেবন।' },
+  'Florest 100': { strenth: 'Tablet', generic: 'Fluvoxamine Maleate 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Lyroxen CR 82.5': { strenth: 'Cr Tablet', generic: 'Pregabalin 82.5 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Lyroxen CR 165': { strenth: 'Cr Tablet', generic: 'Pregabalin 165 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে নেবেন।' },
+  'Olestar Powder for Suspension': { strenth: 'Sachet', generic: 'Cholestyramine 4 gm', dose: '১ প্যাকেট', duration: '১৪ দিন', remark: 'খাবারের পরে দ্রবণ করে নেবেন।' },
+  'M-Fit 7.5': { strenth: 'Tablet', generic: 'Mirtazapine 7.5 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'M-Fit 15': { strenth: 'Tablet', generic: 'Mirtazapine 15 mg', dose: '১+০+০', duration: '১৫ দিন', remark: 'রাতে সেবন।' },
+  'Gilternib': { strenth: 'Tablet', generic: 'Gilteritinib 40 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+'Palboxen': { strenth: 'Capsule', generic: 'Palbociclib 125 mg', dose: '১+০+০', duration: '২১ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+'Bulex': { strenth: 'Syrup', generic: 'Butamirate Citrate 150 mg/100 ml', dose: '১ চা চামচ ৩ বার', duration: '৫ দিন', remark: 'কাশির জন্য, খাবারের পর।' },
+'Kidpred Oral Solution': { strenth: 'Solution', generic: 'Prednisolone 5 mg/5 ml', dose: '১ চা চামচ ২ বার', duration: '৫-৭ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+'Lorbrexen 100': { strenth: 'Tablet', generic: 'Lorlatinib 100 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রতিদিন নির্দিষ্ট সময়ে।' },
+'Bilxen': { strenth: 'Tablet', generic: 'Bilastine 20 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'এলার্জির জন্য, খাবারের ১ ঘণ্টা আগে।' },
+'Deflaxen 24': { strenth: 'Tablet', generic: 'Deflazacort 24 mg', dose: '১+০+০', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'Picoplus 10': { strenth: 'Tablet', generic: 'Sodium Picosulfate 10 mg', dose: '১+০+০', duration: '৩ দিন', remark: 'রাতে, ঘুমানোর আগে।' },
+'Zo-Mups 40': { strenth: 'Mups Tablet', generic: 'Esomeprazole 40 mg', dose: '১+০+০', duration: '১৪ দিন', remark: 'খাবারের ৩০ মিনিট আগে।' },
+'Lyroxen 25': { strenth: 'Capsule', generic: 'Pregabalin 25 mg', dose: '১+০+১', duration: '১৫ দিন', remark: 'স্নায়বিক ব্যথার জন্য।' },
+'Lyroxen 50': { strenth: 'Capsule', generic: 'Pregabalin 50 mg', dose: '১+০+১', duration: '১৫ দিন', remark: 'স্নায়বিক ব্যথার জন্য।' },
+'Terbixen': { strenth: 'Tablet', generic: 'Terbinafine 250 mg', dose: '১+০+০', duration: '৪-৬ সপ্তাহ', remark: 'ফাঙ্গাল ইনফেকশনের জন্য।' },
+'Vironex': { strenth: 'Tablet', generic: 'Entecavir 0.5 mg', dose: '১+০+০', duration: 'দীর্ঘমেয়াদী', remark: 'হেপাটাইটিস B এর জন্য।' },
+'Magnito': { strenth: 'Tablet', generic: 'Magnesium Oxide 365 mg', dose: '১+১+০', duration: '১০ দিন', remark: 'ম্যাগনেসিয়াম ঘাটতির জন্য।' },
+'Resiliva': { strenth: 'Tablet', generic: 'Ivermectin 12 mg', dose: '১+০+০', duration: '১ দিন', remark: 'একবার খাওয়ার পর প্রয়োজন হলে পুনরায়।' },
+'Favirest': { strenth: 'Tablet', generic: 'Favipiravir 200 mg', dose: '২+২', duration: '৭ দিন', remark: 'ভাইরাল ইনফেকশনে ব্যবহৃত।' },
+'Tucaxen 50': { strenth: 'Tablet', generic: 'Tucatinib 50 mg', dose: '১+০+১', duration: 'চিকিৎসকের নির্দেশ অনুযায়ী।', remark: 'ক্যান্সার চিকিৎসায়।' },
+'Tucaxen 150': { strenth: 'Tablet', generic: 'Tucatinib 150 mg', dose: '১+০+১', duration: 'চিকিৎসকের নির্দেশ অনুযায়ী।', remark: 'ক্যান্সার চিকিৎসায়।' },
+'Barixen': { strenth: 'Tablet', generic: 'Baricitinib 2 mg', dose: '১+০+০', duration: '১৪ দিন', remark: 'রিউমাটয়েড আর্থ্রাইটিসের জন্য।' },
+'Capixet': { strenth: 'Tablet', generic: 'Capecitabine 500 mg', dose: '১+১+১', duration: '২১ দিন', remark: 'কেমোথেরাপির সাথে।' },
+'Selcaxen': { strenth: 'Capsule', generic: 'Selpercatinib 40 mg', dose: '১+০+১', duration: 'চিকিৎসকের নির্দেশ অনুযায়ী।', remark: 'ক্যান্সার চিকিৎসায়।' },
+'Agorest': { strenth: 'Tablet', generic: 'Agomelatine 25 mg', dose: '০+০+১', duration: '১৫ দিন', remark: 'রাতে ঘুমানোর আগে।' },
+'Rivaflo': { strenth: 'Tablet', generic: 'Rivaroxaban 10 mg', dose: '১+০+০', duration: '২১ দিন', remark: 'রক্ত জমাট বাঁধা প্রতিরোধে।' },
+'Pirfinex': { strenth: 'Tablet', generic: 'Pirfenidone 267 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'IPF রোগের জন্য।' },
+'Armoxen': { strenth: 'Tablet', generic: 'Armodafinil 150 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'ঘুমজনিত সমস্যা বা নারকোলেপসির জন্য।' },
+'CANVO 50': { strenth: 'Tablet', generic: 'Voriconazole 50 mg', dose: '১+১+০', duration: '১৪ দিন', remark: 'ফাঙ্গাল ইনফেকশনের জন্য।' },
+'Picoplus Oral solution': { strenth: 'Oral Solution', generic: 'Sodium Picosulfate 100 mg/100 ml', dose: '১ চা চামচ রাতে', duration: '৩ দিন', remark: 'ঘুমানোর আগে, প্রয়োজনে।' },
+'Prostaxen': { strenth: 'Tablet', generic: 'Apalutamide 60 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'নিয়মিত প্রতিদিন সকালবেলা খাবারের আগে।' },
+'Caboxen 20': { strenth: 'Capsule', generic: 'Cabozantinib 20 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পর' },
+  'Caboxen 80': { strenth: 'Capsule', generic: 'Cabozantinib 80 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পর' },
+  'Eudaxen': { strenth: 'Tablet', generic: 'Diazoxide 50 mg', dose: '১+১+১', duration: '৭ দিন', remark: 'খাবারের আগে' },
+  'Olanib 100': { strenth: 'Tablet', generic: 'Olaparib 100 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী' },
+  'Urtinex (Syrup)': { strenth: 'Oral Solution', generic: 'Rupatadine 100 mg/100 ml', dose: '৫ ml ১+০+১', duration: '৫ দিন', remark: 'ঘুমের আগে' },
+  'Onaxen': { strenth: 'Solution', generic: 'Ondansetron 80 mg/100 ml', dose: '৫ ml ১+১+১', duration: '৩ দিন', remark: 'বমি হলে' },
+  'Deflaxen Suspension': { strenth: 'Suspension', generic: 'Deflazacort 120 mg/100 ml', dose: '৫ ml ১+০+১', duration: '৭ দিন', remark: 'ডাক্তারের নির্দেশে' },
+  'Xendox Syrup': { strenth: 'Syrup', generic: 'Doxophylline 100 mg/5 ml', dose: '৫ ml ১+১+১', duration: '৭ দিন', remark: 'শ্বাসকষ্টে' },
+  'Roxtal XP 250': { strenth: 'Tablet', generic: 'Cefuroxime + Clavulanic Acid 250 mg + 62.5 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পর' },
+  'Roxtal XP 500': { strenth: 'Tablet', generic: 'Cefuroxime + Clavulanic Acid 500 mg + 125 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পর' },
+  'Urtinex': { strenth: 'Tablet', generic: 'Rupatadine 10 mg', dose: '১+০+০', duration: '৭ দিন', remark: 'রাতে খাবারের পরে' },
+  'Canvo': { strenth: 'Tablet', generic: 'Voriconazole 200 mg', dose: '১+১+০', duration: '৭ দিন', remark: 'ফাংগাল ইনফেকশনে' },
+  'Flexiril': { strenth: 'Tablet', generic: 'Baclofen 10 mg', dose: '১+০+১', duration: '২১ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী' },
+  'Zo-Mups 20': { strenth: 'Mups Tablet', generic: 'Esomeprazole 20 mg', dose: '১+০+০', duration: '১৪ দিন', remark: 'খালি পেটে সকালে' },
+  'Mavixen': { strenth: 'Tablet', generic: 'Glecaprevir + Pibrentasvir 100 mg + 40 mg', dose: '১+০+০', duration: '৮ সপ্তাহ', remark: 'Hepatitis C তে' },
+  'Deflaxen 6': { strenth: 'Tablet', generic: 'Deflazacort 6 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'ডাক্তারের নির্দেশে' },
+  'Sunrise-D': { strenth: 'Capsule', generic: 'Cholecalciferol (Vit. D3) 40000 IU', dose: '১ প্রতি সপ্তাহে', duration: '৪ সপ্তাহ', remark: 'সানডে স্পেশাল' },
+  'Ventoxen Tablet': { strenth: 'Tablet', generic: 'Venetoclax 100 mg', dose: '১+০+০', duration: 'ডাক্তারের পরামর্শ অনুযায়ী', remark: 'CML চিকিৎসায়' },
+  'Xorest 0.5': { strenth: 'Tablet', generic: 'Clonazepam .5 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'ঘুমের আগে' },
+  'Xorest 1': { strenth: 'Tablet', generic: 'Clonazepam 1 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'ঘুমের আগে' },
+  'Xorest 2': { strenth: 'Tablet', generic: 'Clonazepam 2 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'ঘুমের আগে' },
+  'Flexiril 5': { strenth: 'Tablet', generic: 'Baclofen 5 mg', dose: '১+১+১', duration: '১৪ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী' },
+  'Calcixen': { strenth: 'Tablet', generic: 'Calcium (Coral Calcium) + Vitamin D3 500 mg + 200 IU', dose: '১+০+১', duration: '৩০ দিন', remark: 'দুধ বা খাবারের পরে' },
+  'Sinlair': { strenth: 'Tablet', generic: 'Montelukast 10 mg', dose: '১+০+০', duration: '৩০ দিন', remark: 'রাতে ঘুমের আগে' },
+  'Florest': { strenth: 'Tablet', generic: 'Fluvoxamine Maleate 50 mg', dose: '১+০+০', duration: '২১ দিন', remark: 'ডিপ্রেশনে' },
+  'Olixar 5': { strenth: 'Tablet', generic: 'Olanzapine 5 mg', dose: '১+০+০', duration: '২১ দিন', remark: 'ঘুমের আগে' },
+  'Olixar 10': { strenth: 'Tablet', generic: 'Olanzapine 10 mg', dose: '১+০+০', duration: '২১ দিন', remark: 'ঘুমের আগে' },
+  'Resolax 2': { strenth: 'Tablet', generic: 'Prucalopride 2 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'কনস্টিপেশনে' },
+  'Xendox 200': { strenth: 'Tablet', generic: 'Doxophylline 200 mg', dose: '১+০+১', duration: '১০ দিন', remark: 'শ্বাসকষ্টে' },
+  'Xendox 400': { strenth: 'Tablet', generic: 'Doxophylline 400 mg', dose: '১+০+১', duration: '১০ দিন', remark: 'শ্বাসকষ্টে' },
+  
+'Zoleric 20': { strenth: 'Tablet', generic: 'Esomeprazole 20 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'খালি পেটে।' },
+'Airpro': { strenth: 'Syrup', generic: 'Levosalbutamol 1 mg/5 ml', dose: '১ চা চামচ ৩ বার', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'Roxtal 500': { strenth: 'Tablet', generic: 'Cefuroxime 500 mg', dose: '১+০+১', duration: '৭ দিন', remark: 'খাবারের পরে।' },
+'Niro TR': { strenth: 'Capsule', generic: 'Diclofenac Sodium 100 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'Eres 500': { strenth: 'Tablet', generic: 'Erythromycin 500 mg', dose: '১+১+১+১', duration: '৭ দিন', remark: 'খাবারের আগে।' },
+'Lovanzo 40': { strenth: 'Capsule', generic: 'Omeprazole 40 mg', dose: '১+০+০', duration: '১৪ দিন', remark: 'খালি পেটে।' },
+'Panzum 20': { strenth: 'Tablet', generic: 'Pantoprazole 20 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'খালি পেটে।' },
+'Evofix 400': { strenth: 'Capsule', generic: 'Cefixime 400 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'Dolgenal': { strenth: 'Tablet', generic: 'Ketorolac Tromethamine 10 mg', dose: '১+১+১', duration: '৩ দিন', remark: 'ব্যথার সময়।' },
+'Panzum 40': { strenth: 'Tablet', generic: 'Pantoprazole 40 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'খালি পেটে।' },
+'Sinafil 50': { strenth: 'Tablet', generic: 'Sildenafil 50 mg', dose: 'প্রয়োজনে ১টি', duration: 'প্রয়োজনে', remark: 'সহবাসের আগে ১ ঘণ্টা আগে।' },
+'Sinafil 100': { strenth: 'Tablet', generic: 'Sildenafil 100 mg', dose: 'প্রয়োজনে ১টি', duration: 'প্রয়োজনে', remark: 'সহবাসের আগে ১ ঘণ্টা আগে।' },
+'Mysilver': { strenth: 'Tablet', generic: 'Multivitamin & Mineral Combination', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+'Olanib': { strenth: 'Capsule', generic: 'Olaparib 50 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'ডাক্তারের পরামর্শে।' },
+'Osimert': { strenth: 'Tablet', generic: 'Osimertinib 80 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'নিয়মিত সময়মতো।' },
+'Ibruxen': { strenth: 'Capsule', generic: 'Ibrutinib 140 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'ডাক্তারের পরামর্শে।' },
+'Velpanex': { strenth: 'Tablet', generic: 'Sofosbuvir 400 mg + Velpatasvir 100 mg', dose: '১+০+০', duration: '১২ সপ্তাহ', remark: 'নিয়মিত খেতে হবে।' },
+'Sofoxen': { strenth: 'Tablet', generic: 'Sofosbuvir 400 mg', dose: '১+০+০', duration: '১২ সপ্তাহ', remark: 'ডাক্তারের পরামর্শে।' },
+'Covirin': { strenth: 'Capsule', generic: 'Ribavirin 200 mg', dose: '২+০+২', duration: '১২ সপ্তাহ', remark: 'ডাক্তারের পরামর্শে।' },
+'ELOPAG': { strenth: 'Tablet', generic: 'Eltrombopag 25 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের আগে বা পরে।' },
+'ELOPAG 50': { strenth: 'Tablet', generic: 'Eltrombopag 50 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের আগে বা পরে।' },
+'Daclaxen': { strenth: 'Tablet', generic: 'Daclatasvir 60 mg', dose: '১+০+০', duration: '১২ সপ্তাহ', remark: 'নিয়মিত খেতে হবে।' },
+'Nexataf': { strenth: 'Tablet', generic: 'Tenofovir Alafenamide 25 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের পরে।' },
+'Mezoxia': { strenth: 'Tablet', generic: 'Megestrol Acetate 160 mg', dose: '১+০+১', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'ডাক্তারের পরামর্শে।' },
+'Alecnib': { strenth: 'Capsule', generic: 'Alectinib 150 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের সাথে।' },
+'Hepanib': { strenth: 'Tablet', generic: 'Sorafenib 200 mg', dose: '২+০+২', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের আগে।' },
+'Resolax': { strenth: 'Tablet', generic: 'Prucalopride 1 mg', dose: '১+০+০', duration: '১০ দিন', remark: 'প্রয়োজনে।' },
+'Obeliva': { strenth: 'Tablet', generic: 'Obeticholic Acid 10 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের পরে।' },
+'Niranib': { strenth: 'Capsule', generic: 'Niraparib 100 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'নিয়মিত।' },
+'Ponaxen-15': { strenth: 'Tablet', generic: 'Ponatinib 15 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'ডাক্তারের পরামর্শে।' },
+'Ponaxen-45': { strenth: 'Tablet', generic: 'Ponatinib 45 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'ডাক্তারের পরামর্শে।' },
+'Lenvaxen 4': { strenth: 'Capsule', generic: 'Lenvatinib 4 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের পরে।' },
+'Lenvaxen 10': { strenth: 'Capsule', generic: 'Lenvatinib 10 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'খাবারের পরে।' },
+'Obeliva 10': { strenth: 'Tablet', generic: 'Obeticholic Acid 10 mg', dose: '১+০+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'নিয়মিত।' },
+'Tofaxen': { strenth: 'Tablet', generic: 'Tofacitinib 5 mg', dose: '১+১+০', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+'Olanib 150': { strenth: 'Tablet', generic: 'Olaparib 150 mg', dose: '১+১+০', duration: 'প্রেসক্রিপশন অনুযায়ী', remark: 'নিয়মিত।' },
+
+'Zetab': { strenth: 'Syrup', generic: 'Zinc 10 mg/5 ml', dose: '১+০+১', duration: '১৪ দিন', remark: 'খাবারের পরে।' },
+'Loce': { strenth: 'Tablet', generic: 'Levofloxacin 500 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খালি পেটে।' },
+'Nexicol': { strenth: 'Tablet', generic: 'Atorvastatin 10 mg', dose: '০+০+১', duration: '৩০ দিন', remark: 'রাতে খাবারের পরে।' },
+'Certiva': { strenth: 'Tablet', generic: 'Multivitamin (Ascorbic Acid + Biotin + ... + Zinc)', dose: '১+০+০', duration: '৩০ দিন', remark: 'এক গ্লাস পানির সাথে।' },
+'Evofix': { strenth: 'Powder For Suspension', generic: 'Cefixime 100 mg/5 ml', dose: '১ চা চামচ দিনে ২ বার', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'Evecal D M': { strenth: 'Tablet', generic: 'Boron + Calcium + Copper + Magnesium + Manganese + Vitamin D + Zinc', dose: '১+০+১', duration: '৩০ দিন', remark: 'দুধ বা খাবারের সাথে।' },
+'Oxiden': { strenth: 'Tablet', generic: 'Multivitamin with Minerals', dose: '১+০+০', duration: '৩০ দিন', remark: 'সকালে খাবারের পরে।' },
+'Prokof': { strenth: 'Syrup', generic: 'Metoclopramide Hydrochloride 5 mg/5 ml', dose: '১ চা চামচ ৩ বার', duration: '৫ দিন', remark: 'খাওয়ার ৩০ মিনিট আগে।' },
+'Roxtal 250': { strenth: 'Tablet', generic: 'Cefuroxime 250 mg', dose: '১+০+১', duration: '৭ দিন', remark: 'খাবারের পরে।' },
+'Roxtal 125': { strenth: 'Powder For Suspension', generic: 'Cefuroxime 125 mg/5 ml', dose: '১ চা চামচ ২ বার', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+'PAM': { strenth: 'Tablet', generic: 'Paracetamol 500 mg', dose: '১+১+১', duration: '৩ দিন', remark: 'জ্বর বা ব্যথায় প্রয়োজনে।' },
+'Evedoxim': { strenth: 'Paediatric Drops', generic: 'Cefpodoxime 20 mg/ml', dose: '০.৫ ml দিনে ২ বার', duration: '৫ দিন', remark: 'শিশুর ওজন অনুযায়ী।' },
+'Epovi': { strenth: 'Mouth Wash', generic: 'Povidone Iodine 1 gm/100 ml', dose: '২ বার গার্গল', duration: '৭ দিন', remark: 'কুলকুচি করার জন্য।' },
+'Anxino': { strenth: 'Tablet', generic: 'Flupenthixol 500 mcg + Melitracen 10 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'মনোরোগে চিকিৎসকের পরামর্শে।' },
+'Niro SR': { strenth: 'Sr Tablet', generic: 'Diclofenac Sodium 100 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'ব্যথায় প্রয়োজনে।' },
+'Fcon': { strenth: 'Tablet', generic: 'Fluconazole 150 mg', dose: '১টা একবারই', duration: '১ দিন', remark: 'একবারে পুরা ডোজ।' },
+'Eres': { strenth: 'Powder For Suspension', generic: 'Erythromycin 250 mg/5 ml', dose: '১ চা চামচ দিনে ৪ বার', duration: '৫ দিন', remark: 'খাবারের ১ ঘন্টা আগে।' },
+'Evdom': { strenth: 'Suspension', generic: 'Domperidone 5 mg/5 ml', dose: '১ চা চামচ দিনে ৩ বার', duration: '৩ দিন', remark: 'খাওয়ার আগে।' },
+'Loviz': { strenth: 'Tablet', generic: 'Levocetirizine Hydrochloride 5 mg', dose: '০+০+১', duration: '৭ দিন', remark: 'রাতে ঘুমানোর আগে।' },
+'Noxen': { strenth: 'Tablet', generic: 'Naproxen 500 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'ব্যথায় প্রয়োজনে।' },
+'Zifolac': { strenth: 'Tablet', generic: 'Folic Acid 5 mg + Zinc 20 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'গর্ভাবস্থায় প্রয়োজনীয়।' },
+'Ciptec': { strenth: 'Powder For Suspension', generic: 'Ciprofloxacin 250 mg/5 ml', dose: '১ চা চামচ ২ বার', duration: '৫ দিন', remark: 'খাবারের আগে।' },
+'Oltum': { strenth: 'Tablet', generic: 'Hyoscine Butyl Bromide 10 mg', dose: '১+১+১', duration: '৩ দিন', remark: 'পেট ব্যথায়।' },
+'Pam Suspension': { strenth: 'Suspension', generic: 'Paracetamol 120 mg/5 ml', dose: '১ চা চামচ ৩ বার', duration: '৩ দিন', remark: 'জ্বর বা ব্যথায়।' },
+'Prokof Drops': { strenth: 'Paediatric Drops', generic: 'Ambroxol 6 mg/ml', dose: '০.৫ ml ২ বার', duration: '৫ দিন', remark: 'শ্বাসকষ্টে।' },
+'Derban': { strenth: 'Cream', generic: 'Silver Sulphadiazine 1%', dose: 'প্রয়োজনমত', duration: '১০ দিন', remark: 'জ্বালাপোড়া স্থানে লাগাতে হবে।' },
+'Miral Gel': { strenth: 'Oral Gel', generic: 'Miconazole 20 mg/gm', dose: '২ বার', duration: '৭ দিন', remark: 'মুখে প্রয়োগ।' },
+'AL': { strenth: 'Suspension', generic: 'Albendazole 200 mg/5 ml', dose: '১ চা চামচ একবারই', duration: '১ দিন', remark: 'ভাত খাবার পরে।' },
+
+'Nam 250': { strength: 'Tablet', generic: 'Mefenamic Acid 250 mg', dose: '১+১+১', duration: '৫ দিন', remark: 'ব্যথার সময় খাবার পরে' },
+  'Pankil': { strength: 'Tablet', generic: 'Aceclofenac 100 mg', dose: '১+০+১', duration: '৭ দিন', remark: 'খাবারের পরে' },
+  'Al 400': { strength: 'Tablet', generic: 'Albendazole 400 mg', dose: '১', duration: '১ দিন', remark: 'রাতে খাবারের পরে' },
+  'Xevlin': { strength: 'Tablet', generic: 'Azithromycin 500 mg', dose: '১+০+০', duration: '৩ দিন', remark: 'খাবারের ১ ঘণ্টা আগে' },
+  'Evecal 500': { strength: 'Tablet', generic: 'Calcium Carbonate 1250 mg', dose: '০+১+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+  'Ostelin': { strength: 'Tablet', generic: 'Calcium + Vitamin D3 500 mg + 200 IU', dose: '০+১+০', duration: '৩০ দিন', remark: 'দুধ বা খাবারের পরে' },
+  'Ciptec 500': { strength: 'Tablet', generic: 'Ciprofloxacin 500 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের ১ ঘণ্টা আগে' },
+  'Ciptec 750': { strength: 'Tablet', generic: 'Ciprofloxacin 750 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের ১ ঘণ্টা আগে' },
+  'PCAF': { strength: 'Tablet', generic: 'Caffeine + Paracetamol 65 mg + 500 mg', dose: '১+১+১', duration: '৩ দিন', remark: 'প্রয়োজনে ব্যথার সময়' },
+  'Evecef 500': { strength: 'Capsule', generic: 'Cephradine 500 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Lovanzo 20': { strength: 'Capsule', generic: 'Omeprazole 20 mg', dose: '০+১+০', duration: '৭ দিন', remark: 'খালি পেটে' },
+  'Evecef Susp': { strength: 'Powder For Suspension', generic: 'Cephradine 125 mg/5 ml', dose: '১ চা চামচ × ৩ বার', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Conloss': { strength: 'Oral Solution', generic: 'Lactulose 68%', dose: '২ চা চামচ রাতে', duration: 'যতদিন প্রয়োজন', remark: 'খাবারের পরে' },
+  'Epovi': { strength: 'Cream', generic: 'Povidone Iodine 6 gm/100 gm', dose: '২ বার', duration: '৭ দিন', remark: 'আক্রান্ত স্থানে লাগাতে হবে' },
+  'Ecton': { strength: 'Cream', generic: 'Econazole Nitrate + Triamcinolone Acetonide 1 gm + 100 mg/100 gm', dose: '২ বার', duration: '৭-১০ দিন', remark: 'শুধু আক্রান্ত স্থানে' },
+  'Evedoxim Susp': { strength: 'Powder For Suspension', generic: 'Cefpodoxime 40 mg/5 ml', dose: '১ চা চামচ × ২ বার', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Nam 500': { strength: 'Tablet', generic: 'Mefenamic Acid 500 mg', dose: '১+০+১', duration: '৩ দিন', remark: 'ব্যথার সময় খাবার পরে' },
+  'Bicom Tab': { strength: 'Tablet', generic: 'Nicotinamide + Pyridoxine + Riboflavin + Vitamin B1 (20+2+2+5 mg)', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+  'Neuroxen': { strength: 'Tablet', generic: 'Cyanocobalamin + Pyridoxine + Vitamin B1 (200 mcg + 200 mg + 100 mg)', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+  'Zicat': { strength: 'Tablet', generic: 'Zinc 20 mg', dose: '১+০+১', duration: '১৪ দিন', remark: 'খাবারের পরে' },
+  'Milium': { strength: 'Tablet', generic: 'Domperidone 10 mg', dose: '১+১+১', duration: '৭ দিন', remark: 'খাবারের ৩০ মিনিট আগে' },
+  'Evofix 200': { strength: 'Capsule', generic: 'Cefixime 200 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Evedoxim 100': { strength: 'Capsule', generic: 'Cefpodoxime 100 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Evecef Drops': { strength: 'Paediatric Drops', generic: 'Cephradine 125 mg/1.25 ml', dose: '১.২৫ ml × ৩ বার', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Xevlin Susp': { strength: 'Powder For Suspension', generic: 'Azithromycin 200 mg/5 ml', dose: '১ চা চামচ × ১ বার', duration: '৩ দিন', remark: 'খাবারের আগে' },
+  'Wellkid': { strength: 'Syrup', generic: 'Multiple vitamins & minerals', dose: '১ চা চামচ × ১ বার', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+  'Thylin SR 300': { strength: 'Tablet', generic: 'Theophylline 300 mg', dose: '১+০+১', duration: '৭ দিন', remark: 'খাবারের পরে' },
+  'Incin': { strength: 'Capsule', generic: 'Indomethacin 25 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে' },
+  'Bicom Syrup': { strength: 'Syrup', generic: 'Same as tablet (20+2+2+5 mg/5 ml)', dose: '১ চা চামচ × ২ বার', duration: '১৫ দিন', remark: 'খাবারের পরে' },
+  'Vifol-Z': { strength: 'Capsule', generic: 'Multivitamin with Iron and Zinc', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+  'TX-500': { strength: 'Capsule', generic: 'Tranexamic Acid 500 mg', dose: '১+১+১', duration: '৫ দিন', remark: 'রক্তপাত বন্ধে' },
+'Water For Injection': { strenth: 'Injection',        generic: 'Water For Injection 5 ml',                                                   dose: 'প্রয়োজনে',         duration: '১–৩ দিন',        remark: 'IV বা IM ব্যবহারের জন্য।' },
+'Xcel 250':            { strenth: 'Suppository',      generic: 'Paracetamol 250 mg',                                                         dose: '১টি',             duration: 'জ্বর থাকা পর্যন্ত', remark: 'পায়ুপথে প্রয়োগ।' },
+'Xcel Drops':          { strenth: 'Paediatric Drops', generic: 'Paracetamol 80 mg/ml',                                                      dose: '১০-১৫ ফোঁটা',      duration: 'জ্বর থাকা পর্যন্ত', remark: 'জ্বরের জন্য।' },
+'Xcel 125':            { strenth: 'Suppository',      generic: 'Paracetamol 125 mg',                                                         dose: '১টি',             duration: 'জ্বর থাকা পর্যন্ত', remark: 'পায়ুপথে প্রয়োগ।' },
+'Xeldrin 10':          { strenth: 'Capsule',          generic: 'Omeprazole 10 mg',                                                           dose: '১+০+১',           duration: '১৪ দিন',         remark: 'খালি পেটে সেবন।' },
+'Xeldrin 40':          { strenth: 'Capsule',          generic: 'Omeprazole 40 mg',                                                           dose: '১+০+১',           duration: '১৪ দিন',         remark: 'খালি পেটে সেবন।' },
+'Xytrex 10':           { strenth: 'Tablet',           generic: 'Olanzapine 10 mg',                                                           dose: '১+০+০',           duration: '৩০ দিন',         remark: 'রাতে ঘুমের আগে।' },
+'Zepam 3':             { strenth: 'Tablet',           generic: 'Bromazepam 3 mg',                                                            dose: '০+০+১',           duration: '১০ দিন',         remark: 'রাতে ঘুমের আগে।' },
+'Zitum 250':           { strenth: 'Injection',        generic: 'Ceftazidime 250 mg/vial',                                                    dose: '১ vial',          duration: '৫–৭ দিন',        remark: 'IV/IM প্রয়োগযোগ্য।' },
+'Zocort 1%':           { strenth: 'Cream',            generic: 'Hydrocortisone 1 gm/100 gm',                                                 dose: 'দিনে ২ বার',       duration: '৭–১০ দিন',       remark: 'ক্ষতস্থানে প্রয়োগ।' },
+'Acical-C':            { strenth: 'Tablet',           generic: 'Calcium Carbonate + Lactate + Vitamin C',                                   dose: '১+০+১',           duration: '৩০ দিন',         remark: 'খাবারের পরে।' },
+'Tynium':              { strenth: 'Tablet',           generic: 'Tiemonium Methylsulphate 50 mg',                                             dose: '১+১+১',           duration: '৫ দিন',          remark: 'পেটে ব্যথার জন্য।' },
+'Livita':              { strenth: 'Syrup',            generic: 'Iron + B Vitamins + Zinc (50 mg + ...)',                                     dose: '১ চা চামচ',       duration: '৩০ দিন',         remark: 'খাবারের পরে।' },
+'Denicol':             { strenth: 'Eye Drops',        generic: 'Chlorpheniramine Maleate + Dexamethasone 500 mg + 100 mg/100 ml',            dose: '১-২ ফোঁটা',       duration: '৫–৭ দিন',        remark: 'প্রতিদিন ২–৩ বার চোখে।' },
+'Tendia Injection':    { strenth: 'Injection',        generic: 'Tramadol Hydrochloride 100 mg/2 ml',                                        dose: '১টি',             duration: 'প্রয়োজনে',        remark: 'ব্যথার জন্য প্রয়োগ।' },
+'Oxyvet':              { strenth: 'Injection',        generic: 'Lidocaine + Oxytetracycline (2 gm + 10 gm/100 ml)',                          dose: '১টি',             duration: 'প্রয়োজনে',        remark: 'IM প্রয়োগ।' },
+'Aciphin 250 IM':      { strenth: 'Injection',        generic: 'Ceftriaxone 250 mg',                                                         dose: '১টি',             duration: '৫ দিন',          remark: 'IM প্রয়োগ।' },
+'Acical M':            { strenth: 'Tablet',           generic: 'Boron + Calcium + Vit D + Zinc + Magnesium',                                dose: '১+০+১',           duration: '৩০ দিন',         remark: 'হাড়ের গঠনে সহায়ক।' },
+'Anaflex SR 500':      { strenth: 'Tablet',           generic: 'Naproxen 500 mg',                                                            dose: '১+০+১',           duration: '৫ দিন',          remark: 'ব্যথার জন্য। খাবারের পরে।' },
+'Avloquin':            { strenth: 'Syrup',            generic: 'Chloroquine Phosphate 80 mg/5 ml',                                           dose: '৫ ml',            duration: '৩ দিন',          remark: 'ম্যালেরিয়ার জন্য।' },
+'Pantex 20':     { strenth: '20 mg', generic: 'Pantoprazole', dose: '১+০+০', duration: '১৪ দিন', remark: 'খালি পেটে সকালে' },
+'Pantex 40':     { strenth: '40 mg', generic: 'Pantoprazole', dose: '১+০+০', duration: '২১ দিন', remark: 'খালি পেটে সকালে' },
+'Permisol':      { strenth: '5%', generic: 'Permethrin', dose: 'রাতে ১ বার', duration: '৩ দিন', remark: 'সারা শরীরে মেখে ৮-১০ ঘণ্টা পর ধুতে হবে' },
+'Pevil':         { strenth: '22.7 mg', generic: 'Pheniramine Maleate', dose: '১+১+০', duration: '৫ দিন', remark: 'ঘুম ঘুম ভাব হতে পারে' },
+'Polyron':       { strenth: '50 mg/5 ml', generic: 'Iron Hydroxide Polymaltose', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাওয়ার পর' },
+'Progic 25':     { strenth: '25 mg', generic: 'Promethazine Hydrochloride', dose: '১+১+০', duration: '৫ দিন', remark: 'প্রয়োজনে রাতে ঘুমের আগে' },
+'Progic Syrup':  { strenth: '5 mg/5 ml', generic: 'Promethazine Hydrochloride', dose: '৫ ml ২ বার', duration: '৫ দিন', remark: 'রাতে ঘুমের আগে' },
+'Prosma Tab':    { strenth: '1 mg', generic: 'Ketotifen', dose: '১+০+১', duration: '২১ দিন', remark: 'অ্যালার্জির জন্য' },
+'Prosma Drops':  { strenth: '0.025%', generic: 'Ketotifen', dose: '১ ফোঁটা করে', duration: '৭ দিন', remark: 'চোখে দিনে ২ বার' },
+'Prosma Syrup':  { strenth: '1 mg/5 ml', generic: 'Ketotifen', dose: '২.৫ ml ২ বার', duration: '২১ দিন', remark: 'খাওয়ার আগে' },
+'Recol':         { strenth: '10 mg', generic: 'Simvastatin', dose: '০+০+১', duration: '৩০ দিন', remark: 'রাতে খাবারের পরে' },
+'Rehydrat ORS':  { strenth: '10 gm + 750 gm + 1.75 gm + 1.45 gm/500 ml', generic: 'ORS Formula', dose: 'প্রয়োজনমতো', duration: 'প্রয়োজন অনুসারে', remark: 'প্রতিবার পাতলা পায়খানার পর ১ প্যাকেট' },
+'Relacsn':       { strenth: '68%', generic: 'Lactulose', dose: '১৫ ml ১ বার', duration: '৫ দিন', remark: 'রাতে ঘুমের আগে' },
+'Reversair':     { strenth: '10 mg', generic: 'Montelukast', dose: '০+০+১', duration: '২১ দিন', remark: 'রাতে খাবারের পরে' },
+'Revigor':       { strenth: 'Multivitamin', generic: 'Multiple vitamins and minerals', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+'Revital GOLD':  { strenth: 'Multivitamin', generic: 'Multiple vitamins and minerals', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+'Revital SILVER':{ strenth: 'Multivitamin', generic: 'Multiple vitamins and minerals', dose: '১+০+০', duration: '৩০ দিন', remark: 'খাবারের পরে' },
+'Rosatan H 12.5/50': { strenth: '12.5 mg + 50 mg', generic: 'Hydrochlorothiazide + Losartan Potassium', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Rosatan H 25/12.5': { strenth: '12.5 mg + 25 mg', generic: 'Hydrochlorothiazide + Losartan Potassium', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Savlon Solution': { strenth: '15 gm + 1.5 gm/100 ml', generic: 'Cetrimide + Chlorhexidine Gluconate', dose: 'প্রয়োজনে', duration: 'প্রয়োজনমতো', remark: 'জখম ধোয়ার জন্য' },
+'Savlon Cream':   { strenth: '500 mg + 100 mg/100 gm', generic: 'Cetrimide + Chlorhexidine Hydrochloride', dose: '২ বার', duration: '৫ দিন', remark: 'ব্যথার জায়গায় মাখতে হবে' },
+'Sedzam':         { strenth: '10 mg', generic: 'Clobazam', dose: '০+০+১', duration: '৭-১৪ দিন', remark: 'ঘুম ও উদ্বেগের জন্য, চিকিৎসকের পরামর্শে' },
+'Sezol DS':       { strenth: '1 gm', generic: 'Secnidazole', dose: '১ ট্যাবলেট', duration: '১ দিন', remark: 'একবারে সম্পূর্ণ ডোজ' },
+'Simet':          { strenth: '67 mg/ml', generic: 'Simethicone', dose: '৫-১০ ফোঁটা', duration: 'প্রয়োজনমতো', remark: 'বাচ্চার গ্যাস ও পেট ব্যথায়' },
+'Sintel 200':     { strenth: '200 mg', generic: 'Albendazole', dose: '১+০+০', duration: '৩ দিন', remark: 'প্যারাসাইটিক ইনফেকশনে' },
+'Sintel 400':     { strenth: '400 mg', generic: 'Albendazole', dose: '১ ট্যাব', duration: '১ দিন', remark: '১ বছরের মধ্যে পুনরায় না' },
+'Skinabin':       { strenth: '1 gm/100 gm', generic: 'Terbinafine', dose: '২ বার', duration: '৭-১৪ দিন', remark: 'ফাঙ্গাল ইনফেকশন এলাকায় লাগাতে হবে' },
+'Skinalar N Cream': { strenth: '25 mg + 500 mg/100 gm', generic: 'Fluocinolone + Neomycin Sulphate', dose: '২ বার', duration: '৫-৭ দিন', remark: 'ব্যথা/চুলকানিতে' },
+'Skinalar N Oint': { strenth: '25 mg + 500 mg/100 gm', generic: 'Fluocinolone + Neomycin Sulphate', dose: '২ বার', duration: '৫-৭ দিন', remark: 'ব্যথা/চুলকানিতে' },
+'Stril 5':        { strenth: '5 mg', generic: 'Lisinopril', dose: '১+০+০', duration: '৩০ দিন', remark: 'ব্লাড প্রেশার নিয়ন্ত্রণে' },
+'Stril 10':       { strenth: '10 mg', generic: 'Lisinopril', dose: '১+০+০', duration: '৩০ দিন', remark: 'ব্লাড প্রেশার নিয়ন্ত্রণে' },
+'Tasti':          { strenth: '6 mg + 200 mg + 50 mg', generic: 'Betacarotene + Vitamin C + Vitamin E', dose: '১+০+০', duration: '৩০ দিন', remark: 'অ্যান্টিঅক্সিডেন্ট' },
+'Tenocab 5/25':   { strenth: '5 mg + 25 mg', generic: 'Amlodipine + Atenolol', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Tenocab 5/50':   { strenth: '5 mg + 50 mg', generic: 'Amlodipine + Atenolol', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Tenoren 100':    { strenth: '100 mg', generic: 'Atenolol', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Tenoren 50':     { strenth: '50 mg', generic: 'Atenolol', dose: '১+০+০', duration: '৩০ দিন', remark: 'প্রেশার নিয়ন্ত্রণে' },
+'Tivit 100':      { strenth: '100 mg', generic: 'Thiamine Hydrochloride', dose: '১+০+১', duration: '১৪ দিন', remark: 'ভিটামিন বি১ এর ঘাটতিতে' },
+'Vave Syrup':     { strenth: '5 mg/5 ml', generic: 'Domperidone', dose: '৫ ml ৩ বার', duration: '৫ দিন', remark: 'খাবারের আগে' },
+'Vave Drops':     { strenth: '5 mg/ml', generic: 'Domperidone', dose: '৫-১০ ফোঁটা', duration: '৫ দিন', remark: 'খাবারের আগে' },
+'Lanz':        { strenth: '30 mg',      generic: 'Lansoprazole',                                          form: 'Capsule',        dose: '১+০+০',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Leflox':      { strenth: '500 mg',     generic: 'Levofloxacin',                                          form: 'Tablet',         dose: '১+০+১',     duration: '৭ দিন',  remark: 'খাবারের পরে।' },
+  'Xylone':      { strenth: '2%',        generic: 'Lidocaine Hydrochloride',                                 form: 'Gel',            dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Lipigem':     { strenth: '300 mg',     generic: 'Gemfibrozil',                                           form: 'Capsule',        dose: '১+১+০',     duration: '৩০ দিন', remark: 'খাবারের আগে।' },
+  'Rosatan':     { strenth: '50 mg',      generic: 'Losartan Potassium',                                     form: 'Tablet',         dose: '১+০+০',     duration: 'মাসিক',  remark: 'নিয়মিত খাবেন।' },
+  'Lozide':      { strenth: '80 mg',      generic: 'Gliclazide',                                            form: 'Tablet',         dose: '১+০+১',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Meflon':      { strenth: '250 mg',     generic: 'Mefloquine',                                            form: 'Tablet',         dose: '১+০+০',     duration: '৩ দিন',  remark: 'রাত্রে খাবেন।' },
+  'Metform 850': { strenth: '850 mg',     generic: 'Metformin Hydrochloride',                               form: 'Tablet',         dose: '১+১+১',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Metform 500': { strenth: '500 mg',     generic: 'Metformin Hydrochloride',                               form: 'Tablet',         dose: '১+১+১',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Miconex':     { strenth: '20 mg/gm',   generic: 'Miconazole',                                           form: 'Cream',          dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Micoral':     { strenth: '20 mg/gm',   generic: 'Miconazole',                                           form: 'Oral Gel',       dose: 'দিনে ৩ বার', duration: '৭ দিন',  remark: 'মুখে প্রয়োগ করুন।' },
+  'Micosone':    { strenth: '1 gm + 2 gm/100 gm', generic: 'Hydrocortisone + Miconazole Nitrate',          form: 'Cream',          dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Micosone':    { strenth: '1 gm + 2 gm/100 gm', generic: 'Hydrocortisone + Miconazole Nitrate',          form: 'Ointment',       dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Mobiefn 12.5':{ strenth: '12.5 mg',   generic: 'Diclofenac Sodium',                                   form: 'Suppository',    dose: 'দিনে ১ বার', duration: '৫ দিন',  remark: 'রাতের আগে প্রয়োগ করুন।' },
+  'Mobifen 25':  { strenth: '25 mg',      generic: 'Diclofenac Sodium',                                   form: 'Tablet',         dose: '২+০+২',     duration: '৭ দিন',  remark: 'খাবারের পরে।' },
+  'Mobifen Eye': { strenth: '1 mg/ml',    generic: 'Diclofenac Sodium',                                   form: 'Eye Drops',      dose: 'দিনে ৪ বার', duration: '৭ দিন',  remark: 'চোখে প্রয়োগ করুন।' },
+  'Mobifen 50':  { strenth: '50 mg',      generic: 'Diclofenac Sodium',                                   form: 'Tablet',         dose: '২+০+২',     duration: '৭ দিন',  remark: 'খাবারের পরে।' },
+  'Mobifen 50':  { strenth: '50 mg',      generic: 'Diclofenac Sodium',                                   form: 'Suppository',    dose: 'দিনে ১ বার', duration: '৫ দিন',  remark: 'রাতের আগে প্রয়োগ করুন।' },
+  'Mobifen PLUS':{ strenth: '75 mg + 20 mg/2 ml', generic: 'Diclofenac + Lidocaine Hydrochloride',         form: 'IM Injection',  dose: 'ডাক্তার নির্দেশে', duration: '', remark: '' },
+  'Moniten 20':  { strenth: '20 mg',      generic: 'Isosorbide Mononitrate',                             form: 'Tablet',         dose: '১+০+০',     duration: 'মাসিক',  remark: 'নিয়মিত খাবেন।' },
+  'Mylovit Z':   { strenth: '47 mg + 500 mcg + 10 mg + 1 mg + 2 mg + 2 mg + 50 mg + 22.5 mg', generic: 'Elemental Iron + Folic Acid + Nicotinamide + Pyridoxine Hydrochloride + Riboflavin + Vitamin B1 + Vitamin C + Zinc', form: 'Capsule', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Myrox S':     { strenth: '6 mg/ml',    generic: 'Ambroxol',                                            form: 'Paediatric Drops', dose: 'দিনে ৩ বার', duration: '৭ দিন',  remark: 'মুখে প্রয়োগ করুন।' },
+  'Myrox':       { strenth: '15 mg/5 ml', generic: 'Ambroxol',                                            form: 'Syrup',          dose: '১+১+১',     duration: '৭ দিন',  remark: 'খাবারের পরে।' },
+  'Neocitrin':   { strenth: '250 IU + 5 mg/gm', generic: 'Bacitracin Zinc + Neomycin Sulphate',             form: 'Powder',         dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Nortyl 25':   { strenth: '25 mg',      generic: 'Nortriptyline',                                      form: 'Tablet',         dose: '১+০+০',     duration: '৩০ দিন', remark: 'রাতের আগে।' },
+  'Novatac 20':  { strenth: '20 mg',      generic: 'Famotidine',                                         form: 'Tablet',         dose: '১+০+০',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Novatac 40':  { strenth: '40 mg',      generic: 'Famotidine',                                         form: 'Tablet',         dose: '১+০+০',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Nutrivit E':  { strenth: '200 mg',     generic: 'Vitamin E',                                         form: 'Tablet',         dose: '১+০+০',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Nutrivit-B Syrup': { strenth: '20 mg + 2 mg + 2 mg + 5 mg/5 ml', generic: 'Nicotinamide + Pyridoxine Hydrochloride + Riboflavin + Vitamin B1', form: 'Syrup', dose: '২ চামচ', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Nutrivit-B Tablet': { strenth: '20 mg + 2 mg + 2 mg + 5 mg', generic: 'Nicotinamide + Pyridoxine Hydrochloride + Riboflavin + Vitamin B1', form: 'Tablet', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Nutrivit C':  { strenth: '250 mg',     generic: 'Vitamin C',                                         form: 'Tablet',         dose: '১+০+০',     duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Nyscan':      { strenth: '1 Lac Unit/ml', generic: 'Nystatin',                                        form: 'Suspension',     dose: 'দিনে ৩ বার', duration: '৭ দিন',  remark: 'মুখে প্রয়োগ করুন।' },
+  'Odazyth 250': { strenth: '250 mg',     generic: 'Azithromycin',                                     form: 'Capsule',        dose: '১+০+০',     duration: '৫ দিন',  remark: 'খাবারের পরে।' },
+  'Odazyth Powder': { strenth: '200 mg/5 ml', generic: 'Azithromycin',                                   form: 'Powder For Suspension', dose: 'ডাক্তার নির্দেশে', duration: '', remark: '' },
+  'Odazyth 500': { strenth: '500 mg',     generic: 'Azithromycin',                                     form: 'Tablet',         dose: '১+০+০',     duration: '৫ দিন',  remark: 'খাবারের পরে।' },
+  'Omeflox 400': { strenth: '400 mg',     generic: 'Lomefloxacin',                                     form: 'Tablet',         dose: '১+০+০',     duration: '৭ দিন',  remark: 'খাবারের পরে।' },
+  'Oral Z':      { strenth: '10 mg/5 ml', generic: 'Zinc',                                             form: 'Syrup',          dose: '২ চামচ',   duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+  'Oralon Gargle': { strenth: '200 mg/100 ml', generic: 'Chlorhexidine Gluconate',                       form: 'Gargle & Mouth Wash', dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'মুখ ধোয়ার জন্য।' },
+  'Oralon Gel':  { strenth: '1 %',       generic: 'Chlorhexidine Gluconate',                          form: 'Gel',           dose: 'দিনে ২ বার', duration: '৭ দিন',  remark: 'আবেদন করুণ আক্রান্ত স্থানে।' },
+  'Osetron 8':   { strenth: '8 mg',      generic: 'Ondansetron',                                      form: 'Tablet',         dose: '১+০+০',     duration: '৫ দিন',  remark: 'খাবারের পরে।' },
+    'Feridex': { strenth: 'Syrup', generic: 'Ferrous Gluconate 300 mg/5 ml', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Feridex TR': { strenth: 'Capsule', generic: 'Ferrous Sulphate + Folic Acid 150 mg + 500 mcg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Flamex': { strenth: 'Suspension', generic: 'Ibuprofen 100 mg/5 ml', dose: '১+১+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Flamex 400': { strenth: 'Tablet', generic: 'Ibuprofen 400 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Flamex 200': { strenth: 'Tablet', generic: 'Ibuprofen 200 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Floxabid 250': { strenth: 'Tablet', generic: 'Ciprofloxacin 250 mg', dose: '১+০+১', duration: '৫-৭ দিন', remark: 'খাবারের পরে।' },
+    'Floxabid 500': { strenth: 'Tablet', generic: 'Ciprofloxacin 500 mg', dose: '১+০+১', duration: '৫-৭ দিন', remark: 'খাবারের পরে।' },
+    'Floxabid 750': { strenth: 'Tablet', generic: 'Ciprofloxacin 750 mg', dose: '১+০+১', duration: '৫-৭ দিন', remark: 'খাবারের পরে।' },
+    'Fluclox 250': { strenth: 'Capsule', generic: 'Flucloxacillin 250 mg', dose: '১+১+১+১', duration: '৫-৭ দিন', remark: 'খাবারের ৩০ মিনিট আগে।' },
+    'Fluclox 500': { strenth: 'Capsule', generic: 'Flucloxacillin 500 mg', dose: '১+১+১+১', duration: '৫-৭ দিন', remark: 'খাবারের ৩০ মিনিট আগে।' },
+    'Fluclox Suspension': { strenth: 'Powder For Suspension', generic: 'Flucloxacillin 125 mg/5 ml', dose: '১+১+১+১', duration: '৫-৭ দিন', remark: 'খাবারের ৩০ মিনিট আগে।' },
+    'Fluclox DS': { strenth: 'Powder For Suspension', generic: 'Flucloxacillin 125 mg/5 ml', dose: '১+১+১+১', duration: '৫-৭ দিন', remark: 'খাবারের ৩০ মিনিট আগে।' },
+    'Fluclox 500 Inj': { strenth: 'Injection', generic: 'Flucloxacillin 500 mg/vial', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'IV/IM প্রয়োগ।' },
+    'Fluclox 250 Inj': { strenth: 'Injection', generic: 'Flucloxacillin 250 mg/vial', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'IV/IM প্রয়োগ।' },
+    'Fluver 10': { strenth: 'Tablet', generic: 'Flunarizine 10 mg', dose: '১ বার রাতে', duration: '৩০ দিন', remark: 'ঘুমের আগে।' },
+    'Fluver 5': { strenth: 'Tablet', generic: 'Flunarizine 5 mg', dose: '১ বার রাতে', duration: '৩০ দিন', remark: 'ঘুমের আগে।' },
+    'Fulcinex Suspension': { strenth: 'Suspension', generic: 'Griseofulvin 125 mg/5 ml', dose: '১+১', duration: '৩ সপ্তাহ', remark: 'খাবারের পরে।' },
+    'Fulcinex': { strenth: 'Tablet', generic: 'Griseofulvin 500 mg', dose: '১+১', duration: '৩ সপ্তাহ', remark: 'খাবারের পরে।' },
+    'Glimirid 1': { strenth: 'Tablet', generic: 'Glimepiride 1 mg', dose: '১ বার সকালে', duration: '৩০ দিন', remark: 'সকালের খাবারের আগে।' },
+    'Glimirid 2': { strenth: 'Tablet', generic: 'Glimepiride 2 mg', dose: '১ বার সকালে', duration: '৩০ দিন', remark: 'সকালের খাবারের আগে।' },
+    'Halosin': { strenth: 'Solution', generic: 'Halothane 187 mg/100 ml', dose: 'ডাক্তারের পরামর্শ অনুযায়ী', duration: 'প্রয়োজনে', remark: 'General anesthesia জন্য।' },
+    'Hexiscrub': { strenth: 'Solution', generic: 'Chlorhexidine Gluconate 4 gm/100 ml', dose: 'ব্যবহারের আগে নির্দেশনা পড়ুন', duration: 'প্রয়োজনে', remark: 'স্কিন ক্লিনিং।' },
+    'Hexisol': { strenth: 'Hand Rub', generic: 'Chlorhexidine Gluconate 500 mg/100 ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'হাত জীবাণুমুক্ত করার জন্য।' },
+    'Hexitane': { strenth: 'Cream', generic: 'Chlorhexidine Gluconate 1%', dose: '২ বার', duration: '৭ দিন', remark: 'ক্ষত স্থানে লাগাবেন।' },
+    'Hison': { strenth: 'Injection', generic: 'Hydrocortisone 100 mg/vial', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+    'Hypnoclone': { strenth: 'Tablet', generic: 'Zopiclone 7.5 mg', dose: '১ টি রাতে', duration: 'প্রয়োজনে', remark: 'ঘুমের আগে।' },
+    'Icol E/E': { strenth: 'Eye & Ear Drops', generic: 'Chloramphenicol 5 mg/ml', dose: 'প্রতি ৪ ঘন্টায়', duration: '৫-৭ দিন', remark: 'চোখ/কানে।' },
+    'Icrom': { strenth: 'Eye Drops', generic: 'Sodium Cromoglycate 20 mg/ml', dose: 'প্রতি ৮ ঘন্টায়', duration: '৩০ দিন', remark: 'চোখে।' },
+    'Igen': { strenth: 'Eye Drops', generic: 'Gentamicin 300 mg/100 ml', dose: 'প্রতি ৬ ঘন্টায়', duration: '৭ দিন', remark: 'চোখে।' },
+    'Impedox 100': { strenth: 'Capsule', generic: 'Doxycycline 100 mg', dose: '১+০+১', duration: '৭ দিন', remark: 'খাবারের পরে।' },
+    'Impetet 250': { strenth: 'Capsule', generic: 'Oxytetracycline 250 mg', dose: '১+১+১+১', duration: '৭ দিন', remark: 'খাবারের পরে।' },
+    'Indever 10': { strenth: 'Tablet', generic: 'Propranolol Hydrochloride 10 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Indever 40': { strenth: 'Tablet', generic: 'Propranolol Hydrochloride 40 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Isart 150': { strenth: 'Tablet', generic: 'Irbesartan 150 mg', dose: '১ বার সকালে', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Kacin 100': { strenth: 'Injection', generic: 'Amikacin 100 mg/2 ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'IM/IV প্রয়োগ।' },
+    'Kacin 500': { strenth: 'Injection', generic: 'Amikacin 500 mg/2 ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'IM/IV প্রয়োগ।' },
+    'Kaltide': { strenth: 'Tablet', generic: 'Amiloride Hydrochloride + Hydrochlorothiazide 5 mg + 50 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Karvedil 25': { strenth: 'Tablet', generic: 'Carvedilol 25 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Karvedil 12.5': { strenth: 'Tablet', generic: 'Carvedilol 12.5 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Karvedil 6.25': { strenth: 'Tablet', generic: 'Carvedilol 6.25 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+    'Minolac 30': { strenth: 'Injection', generic: 'Ketorolac Tromethamine 30 mg/ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'Pain management এ ব্যবহার।' },
+    'Minolac 10': { strenth: 'Tablet', generic: 'Ketorolac Tromethamine 10 mg', dose: '১+০+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Ketron 50': { strenth: 'Tablet', generic: 'Ketoprofen 50 mg', dose: '১+১+১', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Ketron SR 100': { strenth: 'Capsule', generic: 'Ketoprofen 100 mg', dose: '১ বার রাতে', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Ketron SR 200': { strenth: 'Capsule', generic: 'Ketoprofen 200 mg', dose: '১ বার রাতে', duration: '৫ দিন', remark: 'খাবারের পরে।' },
+    'Lanz 15': { strenth: 'Capsule', generic: 'Lansoprazole 15 mg', dose: '১ বার সকালে', duration: '৩০ দিন', remark: 'খালি পেটে।' },
+'Clorel 75': { strenth: 'Tab.', generic: 'Clopidogrel 75 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Clorel A': { strenth: 'Tab.', generic: 'Aspirin 75 mg + Clopidogrel 75 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Clovate': { strenth: 'Cream', generic: 'Clobetasol Propionate 50 mg/100 gm', dose: '২ বার', duration: '৩০ দিন', remark: 'ক্ষত স্থানে লাগাতে হবে।' },
+    'Dermasim': { strenth: 'Cream', generic: 'Clotrimazole 10 mg/gm', dose: '২ বার', duration: '৩০ দিন', remark: 'ক্ষত স্থানে লাগাতে হবে।' },
+    'Dermasim VT 500': { strenth: 'VT', generic: 'Clotrimazole 500 mg', dose: '১ টি প্রতি রাতে', duration: '৭ দিন', remark: 'Vaginal Tablet হিসাবে ব্যবহার।' },
+    'Dermasim 1%': { strenth: 'Cream', generic: 'Clotrimazole 10 mg/gm', dose: '২ বার', duration: '৩০ দিন', remark: 'ক্ষত স্থানে লাগাতে হবে।' },
+    'Deslorin 5': { strenth: 'Tab.', generic: 'Desloratadine 5 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Deslorin': { strenth: 'Syrup', generic: 'Desloratadine 2.5 mg/5 ml', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Dexacor': { strenth: 'Injection', generic: 'Dexamethasone Sodium Phosphate 5 mg/ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+    'Dexcor': { strenth: 'Tab.', generic: 'Dexamethasone 0.5 mg', dose: '১+১+১', duration: '৭ দিন', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+    'Didra': { strenth: 'Syrup', generic: 'Diphenhydramine Hydrochloride 10 mg/5 ml', dose: '১+১+১', duration: '৩০ দিন', remark: 'ঘুমের আগে ভালো।' },
+    'Drovin 40': { strenth: 'Tab.', generic: 'Drotaverine Hydrochloride 40 mg', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে।' },
+    'Drovin': { strenth: 'Injection', generic: 'Drotaverine Hydrochloride 40 mg/2 ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'ডাক্তারের পরামর্শ অনুযায়ী।' },
+    'Ecoren VT 150': { strenth: 'VT', generic: 'Econazole Nitrate 150 mg', dose: '১ টি প্রতি রাতে', duration: '৭ দিন', remark: 'Vaginal Tablet হিসাবে ব্যবহার।' },
+    'Ecoren': { strenth: 'Cream', generic: 'Econazole Nitrate 1 gm/100 gm', dose: '২ বার', duration: '৩০ দিন', remark: 'ক্ষত স্থানে লাগাতে হবে।' },
+    'Ecoren T': { strenth: 'Cream', generic: 'Econazole Nitrate + Triamcinolone Acetonide 1 gm + 100 mg/100 gm', dose: '২ বার', duration: '৩০ দিন', remark: 'ক্ষত স্থানে লাগাতে হবে।' },
+    'Erythin 50': { strenth: 'Suspension', generic: 'Erythromycin 50 mg/1.25 ml', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে।' },
+    'Erythin 125': { strenth: 'Suspension', generic: 'Erythromycin 125 mg/5 ml', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে।' },
+    'Esomep 40': { strenth: 'Tab.', generic: 'Esomeprazole 40 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খালি পেটে।' },
+    'Esomep 20': { strenth: 'Tab.', generic: 'Esomeprazole 20 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খালি পেটে।' },
+    'Etrax': { strenth: 'Syrup/Tab.', generic: 'Levamisole 40 mg', dose: 'সাপ্তাহে ১ বার', duration: '৩ সপ্তাহ', remark: 'রাতে খাবার পরে।' },
+    'Floxabid': { strenth: 'IV Infusion', generic: 'Ciprofloxacin 300 mg/100 ml', dose: 'প্রয়োজনে', duration: 'প্রয়োজনে', remark: 'IV প্রয়োগ।' },
+    'Ezolid 600': { strenth: 'Tab.', generic: 'Linezolid 600 mg', dose: '১+১', duration: '১৪ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Ezolid 400': { strenth: 'Tab.', generic: 'Linezolid 400 mg', dose: '১+১', duration: '১৪ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Femizin TR': { strenth: 'Tab.', generic: 'Ferrous Sulphate + Folic Acid + Zinc 150 mg + 500 mcg + 22.5 mg', dose: '১+০+১', duration: '৩০ দিন', remark: 'খাবারের পরে।' },
+ 'Brodil 4': { strenth: 'Tab.', generic: 'Salbutamol', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Brodil': { strenth: 'Syrup', generic: 'Salbutamol', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Colik 10': { strenth: 'Tab.', generic: 'Hyoscine Butyl Bromide', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cab 5': { strenth: 'Tab.', generic: 'Amlodipine', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Calcivit PLUS': { strenth: 'Solution', generic: 'Boric Acid + Calcium Gluconate + Dextrose Anhydrous + Magnesium Hypophosphite', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Canazole 150': { strenth: 'Cap.', generic: 'Fluconazole', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Canazole': { strenth: 'Syrup', generic: 'Fluconazole', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Canazole 50': { strenth: 'Tab.', generic: 'Fluconazole', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Carbofol Z': { strenth: 'Tab.', generic: 'Elemental Iron + Folic Acid + Zinc', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cartilex': { strenth: 'Tab.', generic: 'Chondroitin + Glucosamine', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Castin 250': { strenth: 'Syrup', generic: 'Carbocisteine', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Castin 375': { strenth: 'Cap.', generic: 'Carbocisteine', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cedril 500': { strenth: 'Cap.', generic: 'Cefadroxil', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cedril': { strenth: 'Suspension', generic: 'Cefadroxil', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cefdox 200': { strenth: 'Cap.', generic: 'Cefpodoxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cefim-3 200': { strenth: 'Tab.', generic: 'Cefixime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cefim': { strenth: 'Suspension', generic: 'Cefixime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Celofen': { strenth: 'Tab.', generic: 'Aceclofenac', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Ceplep 200': { strenth: 'Tab.', generic: 'Carbamazepine', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cefdox': { strenth: 'Suspension', generic: 'Cefpodoxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cefdox 100': { strenth: 'Tab.', generic: 'Cefpodoxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cerox A 250': { strenth: 'Cap.', generic: 'Cefuroxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cerox A 125': { strenth: 'Cap.', generic: 'Cefuroxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Cerox A': { strenth: 'Suspension', generic: 'Cefuroxime', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Chear 25': { strenth: 'Tab.', generic: 'Sertraline', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+    'Chear 50': { strenth: 'Tab.', generic: 'Sertraline', dose: '১+১+১', duration: '৩০ দিন', remark: 'খাবারের আগে / পরে।' },
+  'AdNeocin (Vet)': { strenth: '', generic: 'Neomycin Sulphate', dose: '', duration: '', remark: '' },
+    'AdMarbo (Vet)': { strenth: '', generic: 'Marbofloxacin', dose: '', duration: '', remark: '' },
+    'Gentava (Vet)': { strenth: '', generic: 'Gentamicin', dose: '', duration: '', remark: '' },
+    'AdLinco (Vet)': { strenth: '', generic: 'Lincomycin', dose: '', duration: '', remark: '' },
+    'Acical 500': { strenth: 'Tab.', generic: 'Calcium Carbonate', dose: '', duration: '', remark: '' },
+    'Acicot': { strenth: '', generic: 'Dexamethasone', dose: '', duration: '', remark: '' },
+    'Acicox 100': { strenth: 'Tab.', generic: 'Celecoxib', dose: '', duration: '', remark: '' },
+    'Aciflox 200': { strenth: 'Tab.', generic: 'Sparfloxacin', dose: '', duration: '', remark: '' },
+    'Aciphin IM 1 gm': { strenth: 'Injection', generic: 'Ceftriaxone', dose: '', duration: '', remark: '' },
+    'Aciphin IV 500 mg': { strenth: 'Injection', generic: 'Ceftriaxone', dose: '', duration: '', remark: '' },
+    'Aciphin IM 500 mg': { strenth: 'Injection', generic: 'Ceftriaxone', dose: '', duration: '', remark: '' },
+    'Aciphin IV 250 mg': { strenth: 'Injection', generic: 'Ceftriaxone', dose: '', duration: '', remark: '' },
+    'Aciphin IV 1 gm': { strenth: 'Injection', generic: 'Ceftriaxone', dose: '', duration: '', remark: '' },
+    'Acipillin': { strenth: '', generic: 'Ampicillin', dose: '', duration: '', remark: '' },
+    'Aciprin CV 75': { strenth: 'Tab.', generic: 'Aspirin', dose: '', duration: '', remark: '' },
+    'Acira': { strenth: '', generic: 'Chlorpheniramine Maleate', dose: '', duration: '', remark: '' },
+    'Acitrin': { strenth: '', generic: 'Cetirizine Dihydrochloride', dose: '', duration: '', remark: '' },
+    'Acitrin 10': { strenth: 'Tab.', generic: 'Cetirizine Dihydrochloride', dose: '', duration: '', remark: '' },
+    'Zitum 1g': { strenth: 'Cap.', generic: 'Ceftazidime', dose: '', duration: '', remark: '' },
+    'Zitum 500 mg': { strenth: 'Cap.', generic: 'Ceftazidime', dose: '', duration: '', remark: '' },
+    'Adelax': { strenth: '', generic: 'Flupenthixol + Melitracen', dose: '', duration: '', remark: '' },
+    'Amotrex 200': { strenth: 'Cap.', generic: 'Metronidazole', dose: '', duration: '', remark: '' },
+    'Amotrex 400': { strenth: 'Cap.', generic: 'Metronidazole', dose: '', duration: '', remark: '' },
+    'Amotrex': { strenth: '', generic: 'Metronidazole', dose: '', duration: '', remark: '' },
+    'Amotrex DS 800': { strenth: 'Cap.', generic: 'Metronidazole', dose: '', duration: '', remark: '' },
+    'Anaflex 250': { strenth: 'Tab.', generic: 'Naproxen', dose: '', duration: '', remark: '' },
+    'Anaflex': { strenth: '', generic: 'Naproxen', dose: '', duration: '', remark: '' },
+    'Anaflex 500': { strenth: 'Tab.', generic: 'Naproxen', dose: '', duration: '', remark: '' },
+    'Avlocid': { strenth: '', generic: 'Aluminium Oxide + Magnesium Hydroxide + Simethicone', dose: '', duration: '', remark: '' },
+    'Avlocid Plus': { strenth: '', generic: 'Aluminium Hydroxide + Magnesium Hydroxide + Simethicone', dose: '', duration: '', remark: '' },
+    'Avlomox 250': { strenth: 'Cap.', generic: 'Amoxicillin', dose: '', duration: '', remark: '' },
+    'Avlomox': { strenth: '', generic: 'Amoxicillin', dose: '', duration: '', remark: '' },
+    'Avlomox 500': { strenth: 'Cap.', generic: 'Amoxicillin', dose: '', duration: '', remark: '' },
+    'Avlomox DS': { strenth: 'Cap.', generic: 'Amoxicillin', dose: '', duration: '', remark: '' },
+    'Xcel': { strenth: 'Tab.', generic: 'Paracetamol', dose: '', duration: '', remark: '' },
+    'Avloquin': { strenth: '', generic: 'Chloroquine Phosphate', dose: '', duration: '', remark: '' },
+    'Avlosef 250': { strenth: 'Cap.', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlosef': { strenth: '', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlosef 1 gm': { strenth: 'Cap.', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlosef 500 mg': { strenth: 'Cap.', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlosef DS 250': { strenth: 'Cap.', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlosef 500': { strenth: 'Cap.', generic: 'Cephradine', dose: '', duration: '', remark: '' },
+    'Avlotrin': { strenth: '', generic: 'Sulphamethoxazole + Trimethoprim', dose: '', duration: '', remark: '' },
+    'Avloxin 250': { strenth: 'Tab.', generic: 'Cephalexin', dose: '', duration: '', remark: '' },
+    'Avloxin': { strenth: '', generic: 'Cephalexin', dose: '', duration: '', remark: '' },
+    'Avloxin 500': { strenth: 'Tab.', generic: 'Cephalexin', dose: '', duration: '', remark: '' },
+    'Buterol 10': { strenth: 'Tab.', generic: 'Bambuterol Hydrochloride', dose: '', duration: '', remark: '' },
+    'Buterol': { strenth: '', generic: 'Bambuterol Hydrochloride', dose: '', duration: '', remark: '' },
+    'Buterol 20': { strenth: 'Tab.', generic: 'Bambuterol Hydrochloride', dose: '', duration: '', remark: '' },
+    'Betan': { strenth: '', generic: 'Betamethasone Sodium Phosphate + Neomycin Sulphate', dose: '', duration: '', remark: '' },
+    'Brodil 2': { strenth: 'Tab.', generic: 'Salbutamol', dose: '', duration: '', remark: '' },
+'Advasol': { strenth: 'Bolus', generic: 'Vitamin & Electrolyte Supplement', dose: '১ বোলাস', duration: 'প্রয়োজনে', remark: 'পানিশূন্যতা ও দুর্বলতায়' },
+  'Adminth Bolus': { strenth: 'Bolus', generic: 'Albendazole ২৫০০mg', dose: '১ বোলাস', duration: 'একবার', remark: 'অন্ত্রে প্যারাসাইট নাশে' },
+  'Thazine Bolus Vet': { strenth: 'Bolus', generic: 'Phenothiazine Compound', dose: '১ বোলাস', duration: 'প্রয়োজনে', remark: 'প্যারাসাইট নিয়ন্ত্রণে' },
+  'Molaxivet Bolus': { strenth: 'Bolus', generic: 'Magnesium Sulphate + Liquid Paraffin', dose: '১ বোলাস', duration: '১–২ দিন', remark: 'কোষ্ঠকাঠিন্য বা গ্যাসে' },
+  'Adpyrin-D Powder (Vet)': { strenth: 'Powder', generic: 'Paracetamol + Diphenhydramine', dose: '১ চামচ', duration: 'প্রয়োজনে', remark: 'জ্বর ও অ্যালার্জিতে' },
+  'A-Toril Powder (Vet)': { strenth: 'Powder', generic: 'Nitrofurazone + Sodium Bicarbonate', dose: 'পরিমাণমতো', duration: '৫ দিন', remark: 'ব্যাকটেরিয়াল ইনফেকশনে' },
+  'Salic Plus Powder': { strenth: 'Powder', generic: 'Sodium Salicylate + Vitamin C', dose: '১ চামচ', duration: '৫ দিন', remark: 'জ্বর ও হিট স্ট্রোক' },
+  'Meqdaz Powder (Vet)': { strenth: 'Powder', generic: 'Levamisole + Oxyclozanide', dose: '১ চামচ', duration: '৩ দিন', remark: 'প্যারাসাইট নাশে' },
+  'Meqdaz Bolus (Vet)': { strenth: 'Bolus', generic: 'Levamisole ১৫০০mg + Oxyclozanide ১৫০০mg', dose: '১ বোলাস', duration: 'একবার', remark: 'প্যারাসাইট নাশে' },
+  'Vetphen Bolus (Vet)': { strenth: 'Bolus', generic: 'Phenylbutazone ১gm', dose: '১ বোলাস', duration: 'প্রয়োজনে', remark: 'ব্যথা ও জ্বর' },
+  'Olinevet Powder': { strenth: 'Powder', generic: 'Electrolyte + Multivitamin', dose: '১ চামচ পানিতে মিশিয়ে', duration: '৫ দিন', remark: 'শক্তি বৃদ্ধিতে' },
+  'Levaqur DS Bolus (Vet)': { strenth: 'Bolus', generic: 'Levofloxacin ১০০০mg', dose: '১ বোলাস', duration: '৩–৫ দিন', remark: 'ব্যাকটেরিয়াল ইনফেকশনে' },
+  'Advasol Powder (Vet)': { strenth: 'Powder', generic: 'Electrolyte + Vitamin C', dose: '১ চামচ পানিতে মিশিয়ে', duration: '৫ দিন', remark: 'গ্রীষ্মকালীন হিট স্ট্রেসে' },
+  'Adminth Suspension (Vet)': { strenth: 'Suspension', generic: 'Albendazole ১০০mg/ml', dose: '১০ml প্রতি ৫০ কেজি বডি ওয়েট', duration: 'একবার', remark: 'প্যারাসাইট নাশে' },
+  'Furisim Vet Bolus': { strenth: 'Bolus', generic: 'Furosemide ২৫০mg', dose: '১ বোলাস', duration: 'প্রয়োজনে', remark: 'বডি ফ্লুইড রিমুভে' },
+  'AdovaEnro (Vet)': { strenth: 'Injection', generic: 'Enrofloxacin ১০%', dose: '১ml প্রতি ২০ কেজি', duration: '৩–৫ দিন', remark: 'ব্যাকটেরিয়াল ইনফেকশনে' },
+  'Adoxte (Vet)': { strenth: 'Injection', generic: 'Doxycycline ১০০mg/ml', dose: '১ml প্রতি ১০ কেজি', duration: '৩–৫ দিন', remark: '' },
+  'AdCflox (Vet)': { strenth: 'Injection', generic: 'Ciprofloxacin ১০%', dose: '১ml প্রতি ২০ কেজি', duration: '৫ দিন', remark: '' },
+  'AdovaDox (Vet)': { strenth: 'Powder', generic: 'Doxycycline ১০০mg/gm', dose: '১ চামচ প্রতি ১০ কেজি', duration: '৫ দিন', remark: '' },
+  'Chlorel (Vet)': { strenth: 'Injection', generic: 'Chlorpheniramine Maleate ১০mg/ml', dose: '১ml প্রতি ২০ কেজি', duration: 'প্রয়োজনে', remark: 'অ্যালার্জি ও শ্বাসকষ্টে' },
+  'AdLos (Vet)': { strenth: 'Bolus', generic: 'Losartan Potassium', dose: '১ বোলাস', duration: '৩০ দিন', remark: 'উচ্চ রক্তচাপে' },
+  'AdNorflox (Vet)': { strenth: 'Bolus', generic: 'Norfloxacin ৪০০mg', dose: '১ বোলাস', duration: '৩–৫ দিন', remark: '' },
+  'Adoxter (Vet)': { strenth: 'Injection', generic: 'Oxytetracycline ১০০mg/ml', dose: '১ml প্রতি ১০ কেজি', duration: '৩–৫ দিন', remark: '' },
+  'Adotil (Vet)': { strenth: 'Powder', generic: 'Tylosin Tartrate', dose: '১ চামচ প্রতি ১০ কেজি', duration: '৫ দিন', remark: '' },
+  'Adpoli (Vet)': { strenth: 'Bolus', generic: 'Polymyxin B + Neomycin', dose: '১ বোলাস', duration: '৫ দিন', remark: 'ব্যাকটেরিয়াল ইনফেকশন' },
+  'AToltra (Vet)': { strenth: 'Powder', generic: 'Toltrazuril', dose: '১ চামচ প্রতি ১০ কেজি', duration: '৩ দিন', remark: 'ককসিডিওসিসে' },
+  'AdClozine (Vet)': { strenth: 'Injection', generic: 'Clorsulon + Ivermectin', dose: '১ml প্রতি ৫০ কেজি', duration: '১ বার', remark: 'লিভার ফ্লুক ও গাঁট পোকায়' },
+  'AdLeflox (Vet) Powder': { strenth: 'Powder', generic: 'Levofloxacin ১০০mg/gm', dose: '১ চামচ প্রতি ১০ কেজি', duration: '৫ দিন', remark: '' },
+  'AdNeocin (Vet)': { strenth: 'Injection', generic: 'Neomycin Sulphate', dose: '১ml প্রতি ২০ কেজি', duration: '৩ দিন', remark: '' }, 
+'Lacor IM/IV': { strenth: 'Injection', generic: 'Ketorolac Tromethamine ৩০মিগ্রা/মিলি', dose: '১ অ্যাম্পুল', duration: 'প্রয়োজনে', remark: 'IM অথবা IV' },
+  'Tium IV/IM': { strenth: 'Injection', generic: 'Tiemonium Methylsulfate ৫মিগ্রা/মিলি', dose: '১ অ্যাম্পুল', duration: 'প্রয়োজনে', remark: 'IM অথবা IV' },
+  'Lidocaine 1%': { strenth: 'Injection', generic: 'Lidocaine Hydrochloride ১%', dose: 'প্রয়োজনে', duration: '১-৩ দিন', remark: 'লোকাল এনাস্থেশিয়া' },
+  'Sodium Chloride 0.9%': { strenth: 'IV Fluid', generic: 'Sodium Chloride ০.৯%', dose: '৫০০মিলি বা ১০০০মিলি', duration: 'প্রয়োজনে', remark: '' },
+  'Co-Clav 625': { strenth: 'Tab.', generic: 'Amoxicillin ৫০০mg + Clavulanic Acid ১২৫mg', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Co-Clav': { strenth: 'Suspension', generic: 'Amoxicillin + Clavulanic Acid', dose: '৫ml', duration: '৭ দিন', remark: '' },
+  'Cefixime-A 400': { strenth: 'Tab.', generic: 'Cefixime ৪০০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Admero IV': { strenth: 'Injection', generic: 'Meropenem ৫০০mg/১০০০mg', dose: 'IV প্রতি ৮ ঘণ্টায়', duration: '৫-৭ দিন', remark: 'চিকিৎসকের নির্দেশ অনুযায়ী' },
+  'Newxone IV': { strenth: 'Injection', generic: 'Ceftriaxone ১gm', dose: '১ amp IV', duration: '৫-৭ দিন', remark: '' },
+  'Newxone IV/IM': { strenth: 'Injection', generic: 'Ceftriaxone ১gm', dose: 'IV অথবা IM', duration: '৫-৭ দিন', remark: '' },
+  'I-Clo': { strenth: 'Eye Drop', generic: 'Tobramycin + Dexamethasone', dose: '১ ফোঁটা ৪ বার', duration: '৫ দিন', remark: '' },
+  'Vofox': { strenth: 'Eye Drop', generic: 'Ofloxacin', dose: '১ ফোঁটা ৪ বার', duration: '৫ দিন', remark: '' },
+  'Moxflo': { strenth: 'Eye Drop', generic: 'Moxifloxacin', dose: '১ ফোঁটা ৪ বার', duration: '৫ দিন', remark: '' },
+  'Olosol': { strenth: 'Eye Drop', generic: 'Olopatadine ০.১%', dose: '১ ফোঁটা ২ বার', duration: '৭ দিন', remark: '' },
+  'Olosol DS': { strenth: 'Eye Drop', generic: 'Olopatadine ০.২%', dose: '১ ফোঁটা ১ বার', duration: '৭ দিন', remark: '' },
+  'Adrox CV 500': { strenth: 'Tab.', generic: 'Cefuroxime ৫০০mg + Clavulanic Acid', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Adrox CV 250': { strenth: 'Tab.', generic: 'Cefuroxime ২৫০mg + Clavulanic Acid', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Adrox CV': { strenth: 'Suspension', generic: 'Cefuroxime + Clavulanic Acid', dose: '৫ml', duration: '৭ দিন', remark: '' },
+  'Somazole Mups 20': { strenth: 'Tab.', generic: 'Esomeprazole ২০mg (MUPS)', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Somazole Mups 40': { strenth: 'Tab.', generic: 'Esomeprazole ৪০mg (MUPS)', dose: '১+০+০', duration: '১৪ দিন', remark: '' },
+  'Povibac': { strenth: 'Solution', generic: 'Povidone Iodine ১০%', dose: 'বাহ্যিক প্রয়োগ', duration: 'প্রয়োজনে', remark: '' },
+  'Feva one': { strenth: 'Tab.', generic: 'Paracetamol ৫০০mg', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Xofast 180': { strenth: 'Tab.', generic: 'Fexofenadine ১৮০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Fosil-DX': { strenth: 'Tab.', generic: 'Calcium + Vitamin D3 + Zinc', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Povibac 5%': { strenth: 'Solution', generic: 'Povidone Iodine ৫%', dose: 'বাহ্যিক প্রয়োগ', duration: 'প্রয়োজনে', remark: '' },
+  'DRT 60': { strenth: 'Tab.', generic: 'Duloxetine ৬০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'DRT 30': { strenth: 'Tab.', generic: 'Duloxetine ৩০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Adpara Bolus Vet': { strenth: 'Bolus', generic: 'Paracetamol ১৫০০mg (Vet)', dose: '১ বোলাস', duration: 'প্রয়োজনে', remark: 'পশু চিকিৎসা' },
+  'Levaqure Bolus Vet': { strenth: 'Bolus', generic: 'Levofloxacin ৭৫০mg (Vet)', dose: '১ বোলাস', duration: '৫ দিন', remark: 'পশু চিকিৎসা' }, 
+'Carlos 50': { strenth: 'Tab.', generic: 'Losartan Potassium ৫০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Ciproxen': { strenth: 'Suspension', generic: 'Ciprofloxacin ২৫০mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'B-Z': { strenth: 'Tab.', generic: 'Vitamin B Complex + Zinc', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Mucoxin': { strenth: 'Syrup', generic: 'Bromhexine Hydrochloride ৪mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Xofast': { strenth: 'Suspension', generic: 'Fexofenadine ৩০mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Bactokill': { strenth: 'Ointment', generic: 'Mupirocin ১০০mg/৫gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: 'বাহ্যিক প্রয়োগ' },
+  'Ultradol': { strenth: 'Suppository', generic: 'Tramadol Hydrochloride ১০০mg', dose: '১টি রাত্রে', duration: '৩ দিন', remark: '' },
+  'Feva': { strenth: 'Drop', generic: 'Paracetamol ৮০mg/ml', dose: '০.৫ml', duration: '৩ দিন', remark: '' },
+  'Aroxia 60': { strenth: 'Tab.', generic: 'Etoricoxib ৬০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Aroxia 90': { strenth: 'Tab.', generic: 'Etoricoxib ৯০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Aroxia 120': { strenth: 'Tab.', generic: 'Etoricoxib ১২০mg', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Quiva 500 mg': { strenth: 'Tab.', generic: 'Levofloxacin ৫০০mg', dose: '১+০+০', duration: '৭ দিন', remark: '' },
+  'Tium': { strenth: 'Tab.', generic: 'Tiemonium Methylsulphate ৫০mg', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Proxa-A': { strenth: 'Tab.', generic: 'Nitazoxanide ৫০০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Aclosol': { strenth: 'Cream', generic: 'Clobetasol Propionate ৫০mg/১০০gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: 'বাহ্যিক প্রয়োগ' },
+  'New ORS-A Oral Saline': { strenth: 'Oral Saline', generic: 'Glucose + NaCl + KCl + Citrate', dose: '১ প্যাকেট প্রতি ৫০০ml পানিতে', duration: 'প্রয়োজনে', remark: '' },
+  'Jefenac 50': { strenth: 'Suppository', generic: 'Diclofenac Sodium ৫০mg', dose: '১টি রাত্রে', duration: '৩ দিন', remark: '' },
+  'Jefenac 12.5': { strenth: 'Suppository', generic: 'Diclofenac Sodium ১২.৫mg', dose: '১টি রাত্রে', duration: '৩ দিন', remark: '' },
+  'Feva 250': { strenth: 'Suppository', generic: 'Paracetamol ২৫০mg', dose: '১টি প্রয়োজনে', duration: '৫ দিন', remark: '' },
+  'Feva 125': { strenth: 'Suppository', generic: 'Paracetamol ১২৫mg', dose: '১টি প্রয়োজনে', duration: '৫ দিন', remark: '' },
+  'Palmitizer Hand Rub Solution': { strenth: 'Solution', generic: 'Chlorhexidine + Isopropyl Alcohol', dose: 'ব্যবহারের পূর্বে হাত পরিষ্কার করুন', duration: 'প্রয়োজনে', remark: '' },
+  'Airflow': { strenth: 'Tab.', generic: 'Montelukast ১০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'RED Plus CI': { strenth: 'Cap.', generic: 'Iron + Folic Acid + Zinc', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Emigut 8': { strenth: 'Tab.', generic: 'Ondansetron ৮mg', dose: '১+১+১', duration: '৩ দিন', remark: '' },
+  'Emigut': { strenth: 'Solution', generic: 'Ondansetron ৮০mg/১০০ml', dose: '৫ml', duration: '৩ দিন', remark: '' },
+  'Ultranax Plus': { strenth: 'Tab.', generic: 'Esomeprazole ২০mg + Naproxen ৫০০mg', dose: '১+০+১', duration: '৫ দিন', remark: '' },
+  'Famisus': { strenth: 'Suspension', generic: 'Famotidine ৪০mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Fosil - D': { strenth: 'Tab.', generic: 'Calcium (Coral) + Vitamin D3', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Aladin': { strenth: 'Tab.', generic: 'Rupatadine ১০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Mamet': { strenth: 'Suspension', generic: 'Magaldrate ৪৮০mg + Simethicone ২০mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Sipep': { strenth: 'Drop', generic: 'Simethicone ৬৭mg/ml', dose: '০.৫ml', duration: '৫ দিন', remark: '' },
+  'Algifast': { strenth: 'Suspension', generic: 'CaCO₃ + Na Alginate + Na Bicarbonate', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Airflow 4': { strenth: 'Tab.', generic: 'Montelukast ৪mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Airflow 5': { strenth: 'Tab.', generic: 'Montelukast ৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Algilong': { strenth: 'Suspension', generic: 'CaCO₃ + Na Alginate + Na Bicarbonate', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Bismatol': { strenth: 'Suspension', generic: 'Bismuth Subsalicylate ১.৭৫gm/১০০ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Antikof': { strenth: 'Syrup', generic: 'Diphenhydramine + Guaiphenesin + Levomenthol', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Tink': { strenth: 'Syrup', generic: 'Ketotifen ১mg/৫ml', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Duomeal Plus': { strenth: 'Suspension', generic: 'Aluminium Oxide + Mg Hydroxide + Simethicone', dose: '৫ml', duration: '৫ দিন', remark: '' },
+  'Somazole IV': { strenth: 'Injection', generic: 'Esomeprazole ৪০mg/vial', dose: 'IV', duration: 'প্রয়োজনে', remark: 'চিকিৎসকের নির্দেশ অনুযায়ী' }, 
+'Prolol': { strenth: 'Tab.', generic: 'Metoprolol Tartrate ৫০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Ribomin': { strenth: 'Tab.', generic: 'Riboflavin ৫mg', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Folate': { strenth: 'Tab.', generic: 'Folic Acid ৫mg', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Combomin': { strenth: 'Tab.', generic: 'Vitamin B1 + B6 + B12', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Conatrim': { strenth: 'Cream', generic: 'Econazole + Triamcinolone', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: 'বাহ্যিক প্রয়োগ' },
+  'Metobet': { strenth: 'Cream', generic: 'Betamethasone ১০০mg/১০০gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: '' },
+  'Jefenac Gel': { strenth: 'Gel', generic: 'Diclofenac Sodium ১gm/১০০gm', dose: 'প্রয়োজনমতো', duration: '৫ দিন', remark: 'বাহ্যিক প্রয়োগ' },
+  'Relofen 10': { strenth: 'Tab.', generic: 'Baclofen ১০mg', dose: '১+১+১', duration: '৩০ দিন', remark: '' },
+  'Ultranax 500': { strenth: 'Tab.', generic: 'Naproxen ৫০০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Ultradol': { strenth: 'Cap.', generic: 'Tramadol Hydrochloride ৫০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Omrazol 40': { strenth: 'Cap.', generic: 'Omeprazole ৪০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Meczin': { strenth: 'Tab.', generic: 'Meclizine Hydrochloride ৫০mg', dose: '১+০+১', duration: '৫ দিন', remark: '' },
+  'Metodex': { strenth: 'Syrup', generic: 'Dextromethorphan ১০mg/৫ml', dose: '৫ মিলি', duration: '৫ দিন', remark: '' },
+  'Xofast 60': { strenth: 'Tab.', generic: 'Fexofenadine Hydrochloride ৬০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Xofast 120': { strenth: 'Tab.', generic: 'Fexofenadine Hydrochloride ১২০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Clogrel Plus': { strenth: 'Tab.', generic: 'Aspirin ৭৫mg + Clopidogrel ৭৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Calonil': { strenth: 'Tab.', generic: 'Sucralose ৮mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'Pizobet 15': { strenth: 'Tab.', generic: 'Pioglitazone ১৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Vastor 10': { strenth: 'Tab.', generic: 'Atorvastatin ১০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Somazole 40': { strenth: 'Cap.', generic: 'Esomeprazole ৪০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Nixpan 20': { strenth: 'Tab.', generic: 'Pantoprazole ২০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Nixpan 40': { strenth: 'Tab.', generic: 'Pantoprazole ৪০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Proxa-A': { strenth: 'Tab.', generic: 'Nitazoxanide ৫০০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Nopirol': { strenth: 'Tab.', generic: 'Amlodipine ৫mg + Atenolol ২৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Frunal': { strenth: 'Tab.', generic: 'Frusemide ২০mg + Spironolactone ৫০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Gutset': { strenth: 'Tab.', generic: 'Domperidone ১০mg', dose: '১+০+১', duration: '১০ দিন', remark: '' },
+  'Glaryl 1': { strenth: 'Tab.', generic: 'Glimepiride ১mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Glaryl 2': { strenth: 'Tab.', generic: 'Glimepiride ২mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'D-Met 500': { strenth: 'Tab.', generic: 'Metformin Hydrochloride ৫০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Atonul 50': { strenth: 'Tab.', generic: 'Atenolol ৫০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' }, 
+'Calcium A': { strenth: 'Tab.', generic: 'Calcium Carbonate ১২৫০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Fleco': { strenth: 'Tab.', generic: 'Aceclofenac ১০০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Feva PLUS': { strenth: 'Tab.', generic: 'Caffeine + Paracetamol ৬৫mg + ৫০০mg', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Adrest': { strenth: 'Tab.', generic: 'Bromazepam ৩mg', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Clozepam 0.5': { strenth: 'Tab.', generic: 'Clonazepam ০.৫mg', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Adrox': { strenth: 'Susp.', generic: 'Cefuroxime ২৫০mg/৫ml', dose: '৫ মিলি', duration: '৭ দিন', remark: '' },
+  'Cefixime A': { strenth: 'Susp.', generic: 'Cefixime ১০০mg/৫ml', dose: '৫ মিলি', duration: '৭ দিন', remark: '' },
+  'Cefixime A 200': { strenth: 'Cap.', generic: 'Cefixime ২০০mg', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Erythromycin A': { strenth: 'Susp.', generic: 'Erythromycin ২৫০mg/৫ml', dose: '৫ মিলি', duration: '৭ দিন', remark: '' },
+  'Adapen 10': { strenth: 'Tab.', generic: 'Hyoscine Butyl Bromide ১০mg', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Cladin': { strenth: 'Tab.', generic: 'Loratadine ১০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Ad - All': { strenth: 'Cap.', generic: 'Multivitamin + Iron + Zinc', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Calcium A&D': { strenth: 'Tab.', generic: 'Calcium + Vitamin D3 ৫০০mg + ২০০ IU', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Aldaben 200': { strenth: 'Tab.', generic: 'Albendazole ২০০mg', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Aldaben': { strenth: 'Susp.', generic: 'Albendazole ২০০mg/৫ml', dose: '৫ মিলি', duration: '৩ দিন', remark: '' },
+  'Cevozin 5': { strenth: 'Tab.', generic: 'Levocetirizine ৫mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Somazole 20': { strenth: 'Cap.', generic: 'Esomeprazole ২০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Adlorin 5': { strenth: 'Tab.', generic: 'Desloratadine ৫mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Redplus Extra': { strenth: 'Cap.', generic: 'Iron + Folic Acid + Vitamin B Complex + Zinc', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Oxacol': { strenth: 'Cap.', generic: 'Flucloxacillin ৫০০mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'Toperol': { strenth: 'Tab.', generic: 'Vitamin E ২০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'D-MET 850': { strenth: 'Tab.', generic: 'Metformin Hydrochloride ৮৫০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Onevit': { strenth: 'Tab.', generic: 'Thiamine Hydrochloride ১০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Loderm': { strenth: 'Cream', generic: 'Clotrimazole ১০mg/gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: 'বাহ্যিক প্রয়োগ' },
+  'Trigal 50': { strenth: 'Cap.', generic: 'Fluconazole ৫০mg', dose: '১+০+০', duration: '৭ দিন', remark: '' },
+  'Trigal 150': { strenth: 'Cap.', generic: 'Fluconazole ১৫০mg', dose: '১+০+০', duration: '১ দিন', remark: '' },
+  'Sugred': { strenth: 'Tab.', generic: 'Gliclazide ৮০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Mitigal': { strenth: 'Cream', generic: 'Miconazole ২০mg/gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: '' },
+  'Zolecon': { strenth: 'Cream', generic: 'Econazole Nitrate ১gm/১০০gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: '' },
+  'Amobet': { strenth: 'Cream', generic: 'Clobetasone Butyrate ৫০mg/১০০gm', dose: 'প্রয়োজনমতো', duration: '৭ দিন', remark: '' },
+  'Mucovan Cap': { strenth: 'Cap.', generic: 'Ambroxol ৭৫mg', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Mucovan Syrup': { strenth: 'Syrup', generic: 'Ambroxol ১৫mg/৫ml', dose: '৫ মিলি', duration: '৫ দিন', remark: '' },
+  'Vinzam': { strenth: 'Tab./Susp.', generic: 'Azithromycin ৫০০mg / ২০০mg/৫ml', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Lacor': { strenth: 'Tab.', generic: 'Ketorolac Tromethamine ১০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Aslic 75': { strenth: 'Tab.', generic: 'Aspirin ৭৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Avidol 6.25': { strenth: 'Tab.', generic: 'Carvedilol ৬.২৫mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Cartace 2.5': { strenth: 'Tab.', generic: 'Ramipril ২.৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Clogrel': { strenth: 'Tab.', generic: 'Clopidogrel ৭৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Nopidin 5': { strenth: 'Tab.', generic: 'Amlodipine ৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' }, 
+'Rosufine 5': { strenth: 'Tab.', generic: 'Rosuvastatin ৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Aldaben DS 400': { strenth: 'Tab.', generic: 'Albendazole ৪০০mg', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Alerjess': { strenth: 'Syrup/Tab.', generic: 'Chlorpheniramine Maleate', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'B Plex': { strenth: 'Cap./Tab./Syrup', generic: 'Nicotinamide + Pyridoxine + Riboflavin + Vitamin B1', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Ciproxen 250': { strenth: 'Tab.', generic: 'Ciprofloxacin ২৫০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Co-Try': { strenth: 'Susp./Tab.', generic: 'Sulphamethoxazole + Trimethoprim', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Duomeal': { strenth: 'Susp./Tab.', generic: 'Aluminium Hydroxide + Magnesium Hydroxide', dose: '১+১+১', duration: '১০ দিন', remark: '' },
+  'Feva': { strenth: 'Susp./Tab.', generic: 'Paracetamol', dose: '১+১+১', duration: '৫ দিন', remark: '' },
+  'Helben': { strenth: 'Susp.', generic: 'Mebendazole', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'J Mox 250': { strenth: 'Cap.', generic: 'Amoxicillin ২৫০mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'J Mox': { strenth: 'Susp./Drops', generic: 'Amoxicillin', dose: 'বালেন্স অনুযায়ী', duration: '৭ দিন', remark: '' },
+  'Jefenac TR 100': { strenth: 'Cap.', generic: 'Diclofenac Sodium ১০০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'Jefrin': { strenth: 'Syrup', generic: 'Ferrous Sulphate ২০০mg/৫ml', dose: '১০ মিলি', duration: '৩০ দিন', remark: 'খাবারের পর' },
+  'J Zinc 10mg/5ml': { strenth: 'Syrup', generic: 'Zinc ১০mg/৫ml', dose: '১০ মিলি', duration: '১৫ দিন', remark: '' },
+  'Jescabilotion 25%': { strenth: 'Lotion', generic: 'Benzyl Benzoate ১.২৫ gm/৫ml', dose: 'বাহ্যিক প্রয়োগ', duration: '৭ দিন', remark: '' },
+  'Jess Whitfield': { strenth: 'Ointment', generic: 'Benzoic Acid + Salicylic Acid', dose: 'বাহ্যিক প্রয়োগ', duration: '৭ দিন', remark: '' },
+  'Metra 400': { strenth: 'Tab.', generic: 'Metronidazole ৪০০mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'Jefenac': { strenth: 'Tab.', generic: 'Diclofenac Sodium ৫০mg', dose: '১+১+০', duration: '৫ দিন', remark: '' },
+  'O R S A': { strenth: 'Oral Saline', generic: 'Dextrose Anhydrous + Electrolytes', dose: 'বালেন্স অনুযায়ী', duration: '৫ দিন', remark: '' },
+  'Ventosol': { strenth: 'Syrup', generic: 'Salbutamol ২mg/৫ml', dose: '৫ মিলি', duration: '১০ দিন', remark: 'খাবারের পর' },
+  'J Mox 500': { strenth: 'Cap.', generic: 'Amoxicillin ৫০০mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'Metra': { strenth: 'Susp.', generic: 'Metronidazole ২০০mg/৫ml', dose: '৫ মিলি', duration: '৭ দিন', remark: '' },
+  'Ciproxen 500': { strenth: 'Tab.', generic: 'Ciprofloxacin ৫০০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Jedine 250': { strenth: 'Cap.', generic: 'Cephradine ২৫০mg', dose: '১+১+১', duration: '৭ দিন', remark: '' },
+  'Jedine 500': { strenth: 'Cap.', generic: 'Cephradine ৫০০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Jedine': { strenth: 'Susp./Drops', generic: 'Cephradine', dose: 'বালেন্স অনুযায়ী', duration: '৭ দিন', remark: '' },
+  'Red Plus': { strenth: 'Cap.', generic: 'Ferrous Sulphate + Folic Acid + Zinc', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Omrazole 20': { strenth: 'Cap.', generic: 'Omeprazole ২০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Cirizin 10': { strenth: 'Tab.', generic: 'Cetirizine Dihydrochloride ১০mg', dose: '১+০+০', duration: '৫ দিন', remark: '' },
+  'Cirizin': { strenth: 'Syrup', generic: 'Cetirizine Dihydrochloride ৫mg/৫ml', dose: '৫ মিলি', duration: '৫ দিন', remark: '' },
+  'Gutset': { strenth: 'Tab./Susp.', generic: 'Domperidone', dose: '১+০+১', duration: '৭ দিন', remark: '' }, 
+'Nimocon 500': { strenth: 'Tab.', generic: 'Azithromycin 500mg', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Adbon': { strenth: 'Tab.', generic: 'Calcium + Vitamin D3', dose: '১+০+১', duration: '১৫ দিন', remark: '' },
+  'Opental 50': { strenth: 'Tab.', generic: 'Tramadol Hydrochloride ৫০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Acidex 20': { strenth: 'Cap.', generic: 'Omeprazole ২০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Neutin 600': { strenth: 'Tab.', generic: 'Gabapentin ৬০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'AFDC-2 F/C': { strenth: 'Tab.', generic: 'Isoniazid + Rifampicin ৭৫mg + ১৫০mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'AFDC-4 F/C': { strenth: 'Tab.', generic: 'Ethambutol + Isoniazid + Pyrazinamide + Rifampicin ২৭৫mg + ৭৫mg + ৪০০mg + ১৫০mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'AFDC-3': { strenth: 'Tab.', generic: 'Ethambutol + Isoniazid + Rifampicin ২৭৫mg + ৭৫mg + ১৫০mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'Tubutol': { strenth: 'Tab.', generic: 'Ethambutol ১০০mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'AFDCDT-2': { strenth: 'Dispersible Tab.', generic: 'Isoniazid + Rifampicin ৫০mg + ৭৫mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'AFDCDT-3': { strenth: 'Dispersible Tab.', generic: 'Isoniazid + Pyrazinamide + Rifampicin ৫০mg + ১৫০mg + ৭৫mg', dose: '১+০+১', duration: '৬০ দিন', remark: '' },
+  'Levetiracetam 250': { strenth: 'Tab.', generic: 'Levetiracetam ২৫০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Levetiracetam 500': { strenth: 'Tab.', generic: 'Levetiracetam ৫০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Levetiracetam 750': { strenth: 'Tab.', generic: 'Levetiracetam ৭৫০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Levetiracetam 1000': { strenth: 'Tab.', generic: 'Levetiracetam ১০০০mg', dose: '১+০+১', duration: '৩০ দিন', remark: '' },
+  'Donepezil Hydrochloride 5': { strenth: 'Tab.', generic: 'Donepezil Hydrochloride ৫mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Donepezil Hydrochloride 10': { strenth: 'Tab.', generic: 'Donepezil Hydrochloride ১০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Cefufine': { strenth: 'Powder for Suspension', generic: 'Cefuroxime', dose: 'বালেন্স অনুযায়ী', duration: '৭ দিন', remark: '' },
+  'Cefufine 500': { strenth: 'Tab.', generic: 'Cefuroxime ৫০০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Cefufine 250': { strenth: 'Tab.', generic: 'Cefuroxime ২৫০mg', dose: '১+১+০', duration: '৭ দিন', remark: '' },
+  'Cefatop': { strenth: 'Powder for Suspension', generic: 'Cefixime', dose: 'বালেন্স অনুযায়ী', duration: '৭ দিন', remark: '' },
+  'Cefatop 200': { strenth: 'Cap.', generic: 'Cefixime ২০০mg', dose: '১+০+১', duration: '৭ দিন', remark: '' },
+  'Maxtrol 20': { strenth: 'Tab.', generic: 'Esomeprazole ২০mg', dose: '১+০+১', duration: '১৪ দিন', remark: '' },
+  'Atofine 20': { strenth: 'Tab.', generic: 'Atorvastatin ২০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Atofine 10': { strenth: 'Tab.', generic: 'Atorvastatin ১০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Azifine': { strenth: 'Powder for Suspension', generic: 'Azithromycin ২০০mg/৫ml', dose: 'বালেন্স অনুযায়ী', duration: '৩ দিন', remark: '' },
+  'Azifine 500': { strenth: 'Tab.', generic: 'Azithromycin ৫০০mg', dose: '১+০+০', duration: '৩ দিন', remark: '' },
+  'Glorinta': { strenth: 'Tab.', generic: 'Ticagrelor ৯০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' },
+  'Rosufine 10': { strenth: 'Tab.', generic: 'Rosuvastatin ১০mg', dose: '১+০+০', duration: '৩০ দিন', remark: '' }
+  
+  
+  // আরও যুক্ত করতে পারেন
+};
+
+  // Bangladesh District and Thana data (simplified example, you can add full data)
+  const districtThanaData = {
+   // ঢাকা বিভাগ
+"ঢাকা": ["ঢাকা সদর", "সাভার", "ধামরাই", "দোহার", "নবাবগঞ্জ", "কেরানীগঞ্জ"],
+"গাজীপুর": ["গাজীপুর সদর", "কালিয়াকৈর", "কাপাসিয়া", "শ্রীপুর", "কালীগঞ্জ"],
+"নারায়ণগঞ্জ": ["নারায়ণগঞ্জ সদর", "সিদ্ধিরগঞ্জ", "ফতুল্লা", "সোনারগাঁ", "রূপগঞ্জ", "আড়াইহাজার"],
+"কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর", "ভৈরব", "হোসেনপুর", "কটিয়াদি", "করিমগঞ্জ", "তাড়াইল", "বাজিতপুর", "কুলিয়ারচর", "নিকলী", "মিঠামইন", "ইটনা", "অষ্টগ্রাম", "পাকুন্দিয়া"],
+"মুন্সিগঞ্জ": ["মুন্সিগঞ্জ সদর", "লৌহজং", "গজারিয়া", "শ্রীনগর", "টঙ্গিবাড়ি", "সিরাজদিখান"],
+"মাদারীপুর": ["মাদারীপুর সদর", "শিবচর", "কালকিনি", "রাজৈর"],
+"রাজবাড়ী": ["রাজবাড়ী সদর", "গোয়ালন্দ", "পাংশা", "বালিয়াকান্দি", "কালুখালী"],
+"গোপালগঞ্জ": ["গোপালগঞ্জ সদর", "কোটালীপাড়া", "কাশিয়ানী", "মুকসুদপুর", "টুঙ্গিপাড়া"],
+"টাঙ্গাইল": ["টাঙ্গাইল সদর", "সখীপুর", "মির্জাপুর", "ঘাটাইল", "ভুয়াপুর", "গোপালপুর", "কালিহাতী", "ধনবাড়ী", "নাগরপুর", "দেলদুয়ার", "বাসাইল"],
+"নরসিংদী": ["নরসিংদী সদর", "বেলাবো", "মনোহরদী", "রায়পুরা", "শিবপুর", "পলাশ"],
+"ফরিদপুর": ["ফরিদপুর সদর", "নগরকান্দা", "ভাঙ্গা", "সালথা", "চরভদ্রাসন", "সদরপুর", "বোয়ালমারী", "আলফাডাঙ্গা", "মধুখালী"],
+"শরীয়তপুর": ["শরীয়তপুর সদর", "নড়িয়া", "ভেদরগঞ্জ", "ডামুড্যা", "জাজিরা", "গোসাইরহাট"],
+
+// চট্টগ্রাম বিভাগ
+"চট্টগ্রাম": ["চট্টগ্রাম সদর", "কোতোয়ালী", "পতেঙ্গা", "পাঁচলাইশ", "বাকলিয়া", "দক্ষিণ খুলশী", "উত্তর খুলশী", "হালিশহর", "ডবলমুরিং", "চকবাজার", "বন্দর", "পটিয়া", "বাঁশখালী", "আনোয়ারা", "লোহাগাড়া", "সাতকানিয়া", "চন্দনাইশ", "রাঙ্গুনিয়া", "রাউজান", "মীরসরাই", "ফটিকছড়ি", "হাটহাজারী", "সন্দ্বীপ", "সীতাকুণ্ড"],
+"কক্সবাজার": ["কক্সবাজার সদর", "চকরিয়া", "উখিয়া", "টেকনাফ", "মহেশখালী", "রামু", "পেকুয়া"],
+"রাঙামাটি": ["রাঙামাটি সদর", "কাপ্তাই", "বাঘাইছড়ি", "লংগদু", "বরকল", "জুরাছড়ি", "বিলাইছড়ি", "রাজস্থলী", "নানিয়ারচর"],
+"খাগড়াছড়ি": ["খাগড়াছড়ি সদর", "দিঘিনালা", "মানিকছড়ি", "রামগড়", "মেঘলা", "পানছড়ি", "লক্ষ্মীছড়ি"],
+"বান্দরবান": ["বান্দরবান সদর", "রুমা", "থানচি", "আলীকদম", "সুন্নি", "নাইক্ষ্যংছড়ি", "লক্ষীছড়ি"],
+"ফেনী": ["ফেনী সদর", "দাগনভূঞা", "ছাগলনাইয়া", "পরশুরাম"],
+"নোয়াখালী": ["নোয়াখালী সদর", "সদর দক্ষিণ", "সদর উত্তর", "চাটখিল", "সেনবাগ", "কোম্পানীগঞ্জ", "হালুয়াঘাট", "কুতুবদিয়া"],
+"লক্ষ্মীপুর": ["লক্ষ্মীপুর সদর", "রায়পুরা", "কমলনগর"],
+"চাঁদপুর": ["চাঁদপুর সদর", "হাইমচর", "ফরিদগঞ্জ", "কচুয়া", "শাহরাস্তি", "হাজীগঞ্জ", "নগর"],
+"কুমিল্লা": ["কুমিল্লা সদর", "মুরাদনগর", "দাউদকান্দি", "মেঘনা", "তিতাস", "ব্রাহ্মণপাড়া", "বরুড়া", "লাকসাম", "চৌদ্দগ্রাম", "কোম্পানীগঞ্জ", "নাঙ্গলকোট"],
+"ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর", "আশুগঞ্জ", "নাসিরনগর", "বিজয়নগর", "সরাইল", "আখাউড়া", "বান্দর"],
+  
+// রাজশাহী বিভাগ
+"রাজশাহী": ["রাজশাহী সদর", "পবা", "গোদাগাড়ী", "বাঘা", "বাগমারা", "চারঘাট", "মোহনপুর", "তানোর", "নাটোর", "সিংড়া", "বড়াইগ্রাম", "বাগাতিপাড়া", "চাঁপাইনবাবগঞ্জ", "শিবগঞ্জ", "ভোলাহাট", "নাচোল", "গোমস্তাপুর", "নওগাঁ", "পোরশা", "বিরামপুর", "রাণীশংকৈল", "আত্রাই", "মান্দা", "পুঠিয়া", "সিরাজগঞ্জ", "কাজিপুর", "কালিহাতী", "তাড়াশ", "দুর্গাপুর", "উল্লাপাড়া"],
+
+// খুলনা বিভাগ
+"খুলনা": ["খুলনা সদর", "দিঘলিয়া", "ডুমুরিয়া", "বটিয়াঘাটা", "ফুলতলা", "পাইকগাছা", "রূপসা", "তেরখাদা", "দাকোপ", "কয়রা"],
+"যশোর": ["যশোর সদর", "কেশবপুর", "মনিরামপুর", "চৌগাছা", "শার্শা", "ঝিকরগাছা", "বাঘারপাড়া"],
+"সাতক্ষীরা": ["সাতক্ষীরা সদর", "আশাশুনি", "কলারোয়া", "দেবহাটা", "শ্যামনগর", "তালা", "কালিগঞ্জ"],
+"বাগেরহাট": ["বাগেরহাট সদর", "কচুয়া", "মোল্লাহাট", "মোড়েলগঞ্জ", "চরজব্বার", "ফুলছড়ি", "রাস্তা", "মংলাখালী"],
+"কুষ্টিয়া": ["কুষ্টিয়া সদর", "কুমারখালি", "খোকসা", "মিরপুর", "দৌলতপুর"],
+"ঝিনাইদহ": ["ঝিনাইদহ সদর", "কোটচাঁদপুর", "ঝিনাইদহ Sadar", "শৈলকূপা", "হরিণাকুন্ডু"],
+"চুয়াডাঙ্গা": ["চুয়াডাঙ্গা সদর", "দামুড়হুদা", "জলপাইগুড়ি", "আলমডাঙ্গা"],
+"মাগুরা": ["মাগুরা সদর", "শালখালী", "মজুমদারহাট", "মহেশপুর"],
+"মেহেরপুর": ["মেহেরপুর সদর", "গাংনী", "মুজিবনগর"],
+"নড়াইল": ["নড়াইল সদর", "লোহাগড়া", "কলিয়া"],
+
+// বরিশাল বিভাগ
+"বরিশাল": ["বরিশাল সদর", "মুলাদী", "হিজলা", "গৌরনদী", "আগৈলঝাড়া", "উজিরপুর", "বাবুগঞ্জ", "বাকেরগঞ্জ", "মেহেন্দিগঞ্জ"],
+"পটুয়াখালী": ["পটুয়াখালী সদর", "গলাচিপা", "দশমিনা", "বাউফল", "কলাপাড়া", "মির্জাগঞ্জ", "রাঙ্গাবালী"],
+"ভোলা": ["ভোলা সদর", "তজুমদ্দিন", "বোরহানউদ্দিন", "দৌলতখান", "মনপুরা", "লালমোহন", "চরফ্যাশন"],
+"ঝালকাঠি": ["ঝালকাঠি সদর", "কালকিনিরচর", "নলছিটি", "রাজাপুর", "ঝালকাঠি সদর", "গৌরানদী"],
+"পিরোজপুর": ["পিরোজপুর সদর", "নাজিরপুর", "ভাণ্ডারিয়া", "কোটালীপাড়া", "মঠবাড়ীয়া", "বাউফল", "ঝালকাঠি"],
+
+// সিলেট বিভাগ
+"সিলেট": ["সিলেট সদর", "বালাগঞ্জ", "বিয়ানীবাজার", "বিশ্বনাথ", "জকিগঞ্জ", "গোলাপগঞ্জ", "ফেঞ্চুগঞ্জ", "কোম্পানীগঞ্জ", "ওসমানীনগর"],
+"মৌলভীবাজার": ["মৌলভীবাজার সদর", "কমলগঞ্জ", "শ্রীমঙ্গল", "কুলাউড়া", "রাজনগর", "জুড়ী", "বড়লেখা"],
+"হবিগঞ্জ": ["হবিগঞ্জ সদর", "নবীগঞ্জ", "চুনারুঘাট", "মাধবপুর", "শায়েস্তাগঞ্জ", "বানিয়াচং", "লাখাই", "আজমিরিগঞ্জ"],
+"সুনামগঞ্জ": ["সুনামগঞ্জ সদর", "বিশ্বম্ভরপুর", "দোয়ারাবাজার", "ছাতক", "জগন্নাথপুর", "তেতুলিয়া", "শাল্লা", "ডোমার"],
+  
+// রংপুর বিভাগ
+"রংপুর": ["রংপুর সদর", "তারাগঞ্জ", "কাউনিয়া", "পীরগাছা", "গঙ্গাচড়া", "মিঠাপুকুর", "বদরগঞ্জ", "পীরগঞ্জ"],
+"দিনাজপুর": ["দিনাজপুর সদর", "বিরল", "বোচাগঞ্জ", "বিরামপুর", "নবাবগঞ্জ", "ঘোড়াঘাট", "হাকিমপুর", "পার্বতীপুর", "কাহারোল", "চিরিরবন্দর"],
+"নীলফামারী": ["নীলফামারী সদর", "ডিমলা", "ডোমার", "জলঢাকা", "কিশোরগঞ্জ", "সৈয়দপুর"],
+"কুড়িগ্রাম": ["কুড়িগ্রাম সদর", "রাজারহাট", "ভুরুঙ্গামারি", "নাগেশ্বরী", "উলিপুর", "ফুলবাড়ী", "রৌমারী"],
+"গাইবান্ধা": ["গাইবান্ধা সদর", "সদর", "পলাশবাড়ী", "সাঘাট", "সুন্দরগঞ্জ", "সুজানগর"],
+"লালমনিরহাট": ["লালমনিরহাট সদর", "আদিতমারী", "কালীগঞ্জ", "বান্দরবান"],
+"পঞ্চগড়": ["পঞ্চগড় সদর", "তেঁতুলিয়া", "ডিমলা", "বুড়িচং", "বেলকুচি"],
+
+// ময়মনসিংহ বিভাগ
+"ময়মনসিংহ": ["ময়মনসিংহ সদর", "ধোবাউড়া", "ফুলপুর", "ফুলবাড়িয়া", "গৌরীপুর", "ত্রিশাল", "ভালুকা", "হালুয়াঘাট", "নান্দাইল", "ঈশ্বরগঞ্জ"],
+"জামালপুর": ["জামালপুর সদর", "মাদারগঞ্জ", "দেওয়ানগঞ্জ", "ইসলামপুর", "বকশীগঞ্জ", "সরিষাবাড়ী", "মেলান্দহ"],
+"শেরপুর": ["শেরপুর সদর", "নকলা", "নালিতাবাড়ী", "ঝিনাইগাতী", "শ্রীবরদী"],
+"নেত্রকোনা": ["নেত্রকোনা সদর", "কেন্দুয়া", "আটপাড়া", "খালিয়াজুড়ি", "কলমাকান্দা", "দুর্গাপুর", "মদন", "বারহাট্টা", "পূর্বধলা"],
+
+
+  };
+
+  // Initial load District dropdown
+  const districtSelect = document.getElementById('pDistrict');
+  const thanaSelect = document.getElementById('pThana');
+  function loadDistricts() {
+    districtSelect.innerHTML = `<option value="">-- নির্বাচন করুন --</option>`;
+    Object.keys(districtThanaData).forEach(dist => {
+      const opt = document.createElement('option');
+      opt.value = dist;
+      opt.textContent = dist;
+      districtSelect.appendChild(opt);
+    });
+  }
+  districtSelect.addEventListener('change', function() {
+    const selected = this.value;
+    thanaSelect.innerHTML = `<option value="">-- নির্বাচন করুন --</option>`;
+    if(selected && districtThanaData[selected]) {
+      districtThanaData[selected].forEach(thana => {
+        const opt = document.createElement('option');
+        opt.value = thana;
+        opt.textContent = thana;
+        thanaSelect.appendChild(opt);
+      });
+    }
+  });
+
+  loadDistricts();
+
+  // Auto fill current time in Time input
+  function updateTime() {
+    const now = new Date();
+    const formatted = now.toLocaleTimeString('bn-BD', {hour12:false});
+    document.getElementById('pTime').value = formatted;
+  }
+  updateTime();
+  setInterval(updateTime, 60000);
+
+  // Patient form submit event
+  const patientForm = document.getElementById('patientForm');
+  let patientInfo = {};
+ patientForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  // Patient ID যদি ফাঁকা থাকে, তাহলে অটো জেনারেট করো
+  if (!patientForm.pId.value) {
+    patientForm.pId.value = generatePatientId();
+  }
+
+  patientInfo = {
+    pId: patientForm.pId.value,
+    name: patientForm.pName.value.trim(),
+    age: patientForm.pAge.value.trim(),
+    phone: patientForm.pPhone.value.trim(),
+    gender: patientForm.pGender.value,
+    address: patientForm.pAddress.value.trim(),
+    date: patientForm.pDate.value || new Date().toISOString().slice(0,10),
+    district: patientForm.pDistrict.value,
+    thana: patientForm.pThana.value,
+    image: null, // handle below
+    email: patientForm.pEmail.value.trim(),
+    refBy: patientForm.pRefBy.value.trim(),
+    time: patientForm.pTime.value
+  };
+   const fileInput = patientForm.pImage.files[0];
+  if(fileInput) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      patientInfo.image = evt.target.result;
+      alert('Patient Info saved!');
+      renderPrescription();
+    };
+    reader.readAsDataURL(fileInput);
+  } else {
+    alert('Patient Info saved!');
+    renderPrescription();
+  }
+});
+
+  // Prescription data storage
+  const prescriptionData = {
+    CO: [" Fever and headache", "Hypertension"],
+    HO: ["Diabetes", "Hypertension"],
+    OE: [" Lungs clear", "blood pressure 120/80 mmHg"],
+    Diagnosis: [
+  "Headache","Fever","Jaundice","SOB","IHD","Hypertension","Diabetes Mellitus","Asthma","COPD","Pneumonia",
+  "Gastritis","Urinary Tract Infection","Anemia","Tuberculosis","Arthritis","Migraine","Hypothyroidism","Hyperthyroidism",
+  "Bronchitis","Chronic Kidney Disease","Heart Failure","Stroke","Depression","Anxiety Disorder","Osteoporosis","Peptic Ulcer Disease",
+  "Cholelithiasis","Liver Cirrhosis","Acute Kidney Injury","Sepsis","Epilepsy","Malaria","Dengue Fever","COVID-19","COVID Pneumonia","Pneumothorax",
+  "Pulmonary Embolism","Gout","Psoriasis","Eczema","Chronic Liver Disease"],
+    Investigation: ["s. Iron Profile","USG Of Whole Abdomen","S. Creatinine","RBS","FBS","Widal Test","Upper GI Endoscopy","S. TSH","T3","T4","HB Electrophoresis", "CBC","CRP", "Urine For R/M/E"],
+    Advice: ["শাক খাবেন নাহ।", "শাক খাবেন।", "পাতা খাবেন।"],
+    Upodesh: ["কম তেল, কম ঝাল খাবার খান।", "হালকা গরম ভাত ও সেদ্ধ শাকসবজি খাবেন।",  "১৬ দিন পরে আসবেন।"],
+    Next: ["লক্ষণ বাড়লে দ্রুত যোগাযোগ করুন।", "৭ দিন পরে রিপোর্টসহ পুনরায় দেখা করুন।"],
+    ReferTo: ["Dr. Muhammad Rupom"],
+    medicines: Array.from({length: 20}, () => ({brand:'', strenth:'', generic:'', dose:'', duration:'', remark:''})),
+    selectedCO: [],
+    selectedHO: [],
+    selectedOE: [],
+    selectedDiagnosis: [],
+    selectedInvestigation: [],
+    selectedAdvice: [],
+    selectedUpodesh: [],
+    selectedNextVisit: [],
+    selectedReferTo: [],
+  };
+
+  // Helper: Create modal content with checkboxes or inputs for add/edit
+  const modalContainer = document.getElementById('modalContainer');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalContent = document.getElementById('modalContent');
+  const modalCancel = document.getElementById('modalCancel');
+  const modalSave = document.getElementById('modalSave');
+
+  let currentModalType = null;
+
+  function openModal(type) {
+    currentModalType = type;
+    modalTitle.textContent = `Add/Edit ${type}`;
+    modalContent.innerHTML = '';
+
+    if(type === 'C/O' || type === 'H/O' || type === 'O/E' || type === 'Diagnosis' || type === 'Investigation' || type === 'Advice' || type === 'উপদেশ' || type === 'Refer to' || type === 'Next Visit') {
+        // Show checkboxes + add new input with autocomplete
+        let dataKey = '';
+        let selectedKey = '';
+
+        if (type === 'C/O') {
+            dataKey = 'CO';
+            selectedKey = 'selectedCO';
+        } else if (type === 'H/O') {
+            dataKey = 'HO';
+            selectedKey = 'selectedHO';
+        } else if (type === 'O/E') {
+            dataKey = 'OE';
+            selectedKey = 'selectedOE';
+        } else if (type === 'Diagnosis') {
+            dataKey = 'Diagnosis';
+            selectedKey = 'selectedDiagnosis';
+        } else if (type === 'Investigation') {
+            dataKey = 'Investigation';
+            selectedKey = 'selectedInvestigation';
+        } else if (type === 'Advice') {
+            dataKey = 'Advice';
+            selectedKey = 'selectedAdvice';
+        } else if (type === 'উপদেশ') {
+            dataKey = 'Upodesh';
+            selectedKey = 'selectedUpodesh';
+        } else if (type === 'Refer to') {
+            dataKey = 'ReferTo';
+            selectedKey = 'selectedReferTo';
+        } else if (type === 'Next Visit') {
+            dataKey = 'NextVisit';
+            selectedKey = 'selectedNextVisit';
+        }
+
+        const items = prescriptionData[dataKey] || [];
+        const selectedItems = prescriptionData[selectedKey] || [];
+
+        let html = `<div style="max-height:250px;overflow-y:auto; margin-bottom: 10px;">`;
+        items.forEach((item,i) => {
+            const checked = selectedItems.includes(item) ? 'checked' : '';
+            html += `<label style="display:block; margin-bottom:5px;">
+                <input type="checkbox" value="${item}" ${checked} /> ${item}
+                <button data-index="${i}" class="btnDelItem" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold; margin-left:6px;">×</button>
+            </label>`;
+        });
+        html += `</div>`;
+        
+        // Autocomplete input with datalist
+        html += `
+            <div style="position:relative; margin-bottom:10px;">
+                <input type="text" id="newItemInput" list="itemSuggestions" placeholder="টাইপ করুন বা নতুন আইটেম যোগ করুন" 
+                    style="width:100%; padding:6px; font-size:1rem;" />
+                <datalist id="itemSuggestions">
+                    ${items.map(item => `<option value="${item}">`).join('')}
+                </datalist>
+            </div>
+            <button id="btnAddItem" style="background:#28a745;color:white;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;">যোগ করুন</button>
+        `;
+        
+        modalContent.innerHTML = html;
+
+        // Setup autocomplete functionality
+        const newItemInput = document.getElementById('newItemInput');
+        newItemInput.addEventListener('input', function() {
+            const inputValue = this.value.trim().toLowerCase();
+            if(inputValue.length > 0) {
+                const matchingItems = items.filter(item => 
+                    item.toLowerCase().includes(inputValue)
+                );
+                
+                const datalist = document.getElementById('itemSuggestions');
+                datalist.innerHTML = matchingItems.map(item => 
+                    `<option value="${item}">`
+                ).join('');
+            }
+        });
+
+        // Add item button click
+        document.getElementById('btnAddItem').onclick = function() {
+            const newVal = newItemInput.value.trim();
+            if(newVal !== '') {
+                if(!items.includes(newVal)) {
+                    items.push(newVal);
+                }
+                if(!selectedItems.includes(newVal)) {
+                    selectedItems.push(newVal);
+                }
+                openModal(type); // Refresh the modal
+            }
+        };
+
+        // Delete item event delegation
+        modalContent.querySelectorAll('.btnDelItem').forEach(btn=>{
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const idx = btn.getAttribute('data-index');
+                if(confirm('এই আইটেম মুছে ফেলতে চান?')) {
+                    items.splice(idx,1);
+                    openModal(type);
+                }
+            };
+        });
+      modalContent.innerHTML = html;
+   } else if(type === 'Medicines') {
+  // Show 20 medicine rows input
+  let html = '<table style="width:100%;border-collapse:collapse;">';
+  html += `<thead>
+    <tr>
+      <th style="border:1px solid #ccc;padding:4px;">ক্রমিক</th>
+      <th style="border:1px solid #ccc;padding:4px;">ব্র্যান্ড নাম</th>
+	   <th style="border:1px solid #ccc;padding:4px;">স্ট্রেন্থ</th>
+      <th style="border:1px solid #ccc;padding:4px;">জেনেরিক নাম</th>
+      <th style="border:1px solid #ccc;padding:4px;">ডোজ</th>
+      <th style="border:1px solid #ccc;padding:4px;">কতদিন খাবেন</th>
+	  <th style="border:1px solid #ccc;padding:4px;">রিমার্ক</th>
+	  <th style="border:1px solid #ccc;padding:4px;">✖</th>
+    </tr>
+  </thead><tbody>`;
+  for(let i=0;i<20;i++) {
+    const med = prescriptionData.medicines[i] || {brand:'',strenth:'',generic:'',dose:'',duration:'' ,remark:''};
+    html += `<tr>
+      <td style="border:1px solid #ccc;padding:4px;text-align:center;">${i+1}</td>
+      <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="brand" value="${med.brand}" style="width:100%;" /></td>
+	   <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="strenth" value="${med.strenth}" style="width:100%;" /></td>
+      <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="generic" value="${med.generic}" style="width:100%;" /></td>
+      <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="dose" value="${med.dose}" style="width:100%;" /></td>
+      <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="duration" value="${med.duration}" style="width:100%;" /></td>
+	  <td style="border:1px solid #ccc;padding:4px;"><input type="text" data-index="${i}" data-field="remark" value="${med.remark}" style="width:100%;" /></td>
+	   <td style="border:1px solid #ccc;padding:4px;text-align:center;">
+      <button data-index="${i}" class="btnClearMed" style="color:red; background:none; border:none; font-size:16px; cursor:pointer;">✖</button>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  modalContent.innerHTML = html;
+
+  // Add event listeners to inputs inside modal to update prescriptionData.medicines
+  const inputs = modalContent.querySelectorAll('input[type="text"]');
+  inputs.forEach(input => {
+  input.addEventListener('input', e => {
+    const index = e.target.getAttribute('data-index');
+    const field = e.target.getAttribute('data-field');
+    if (index !== null && field) {
+      prescriptionData.medicines[index][field] = e.target.value;
+	  
+
+      // যদি ব্র্যান্ড নাম টাইপ হয়
+      if (field === 'brand') {
+        const brandName = e.target.value.trim();
+        const foundKey = Object.keys(medicineDatabase).find(key => key.toLowerCase() === brandName.toLowerCase());
+
+        if (foundKey) {
+          const info = medicineDatabase[foundKey];
+          const strenthInput = modalContent.querySelector(`input[data-index="${index}"][data-field="strenth"]`);
+          const genericInput = modalContent.querySelector(`input[data-index="${index}"][data-field="generic"]`);
+          const doseInput = modalContent.querySelector(`input[data-index="${index}"][data-field="dose"]`);
+          const durationInput = modalContent.querySelector(`input[data-index="${index}"][data-field="duration"]`);
+		  const remarkInput = modalContent.querySelector(`input[data-index="${index}"][data-field="remark"]`);
+		 
+          if (strenthInput) {
+            strenthInput.value = info.strenth;
+            prescriptionData.medicines[index].strenth = info.strenth;
+          }
+          if (genericInput) {
+            genericInput.value = info.roma;
+            prescriptionData.medicines[index].roma = info.roma;
+          }
+          if (genericInput) {
+            genericInput.value = info.generic;
+            prescriptionData.medicines[index].generic = info.generic;
+          }
+          if (doseInput) {
+            doseInput.value = info.dose;
+            prescriptionData.medicines[index].dose = info.dose;
+          }
+          if (durationInput) {
+            durationInput.value = info.duration;
+            prescriptionData.medicines[index].duration = info.duration;
+			}
+          if (remarkInput) {
+            remarkInput.value = info.remark;
+            prescriptionData.medicines[index].remark = info.remark;
+          }
+        }
+      }
+    }
+  });
+});
+modalContent.querySelectorAll('.btnClearMed').forEach(btn => {
+  btn.onclick = (e) => {
+    const index = btn.getAttribute('data-index');
+    if (confirm("এই মেডিসিনটি মুছে ফেলবেন?")) {
+      prescriptionData.medicines[index] = {
+        brand: '', strenth: '', generic: '', dose: '', duration: '', remark: ''
+      };
+      openModal('Medicines'); // রিফ্রেশ করে আপডেট দেখাবে
+    }
+  };
+});
+  inputs.forEach(input => {
+    input.addEventListener('input', e => {
+      const index = e.target.getAttribute('data-index');
+      const field = e.target.getAttribute('data-field');
+      if (index !== null && field) {
+        prescriptionData.medicines[index][field] = e.target.value;
+      }
+    });
+  });
+}
+modalContainer.style.display = 'flex';
+
+  }
+
+  // Save modal data handler
+ // Save modal data handler
+modalSave.onclick = () => {
+  if (!currentModalType) return;
+
+  const mapTypeKey = (type) => {
+    const mapping = {
+      'C/O': 'CO',
+      'H/O': 'HO',
+      'O/E': 'OE',
+      'Diagnosis': 'Diagnosis',
+      'Investigation': 'Investigation',
+      'Advice': 'Advice',
+      'উপদেশ': 'Upodesh',
+      'NextVisit': 'NextVisit',
+      'Refer to': 'ReferTo'
+    };
+    return mapping[type] || type;
+  };
+
+  const dataKey = mapTypeKey(currentModalType);
+  const selectedKey = 'selected' + dataKey;
+
+  if (['CO', 'HO', 'OE', 'Diagnosis', 'Investigation', 'Advice', 'Upodesh' ].includes(dataKey)) {
+    const checkedBoxes = [...modalContent.querySelectorAll('input[type=checkbox]:checked')].map(cb => cb.value);
+    prescriptionData[selectedKey] = checkedBoxes;
+
+    const newItemInput = modalContent.querySelector('#newItemInput');
+    const newVal = newItemInput.value.trim();
+    if (newVal !== '') {
+      prescriptionData[dataKey].push(newVal);
+      prescriptionData[selectedKey].push(newVal);
+    }
+
+  } else if (dataKey === 'NextVisit') {
+    const selected = modalContent.querySelector('input[name=nextVisitRadio]:checked');
+    if (selected) prescriptionData.selectedNextVisit = selected.value;
+
+  } else if (dataKey === 'ReferTo') {
+    const selected = modalContent.querySelector('input[name=referToRadio]:checked');
+    const newItemInput = modalContent.querySelector('#newItemInput');
+    const newVal = newItemInput?.value?.trim();
+
+    if (selected) prescriptionData.selectedReferTo = selected.value;
+
+    if (newVal !== '') {
+      prescriptionData.ReferTo.push(newVal);
+      prescriptionData.selectedReferTo = newVal;
+    }
+  }
+
+  modalContainer.style.display = 'none';
+  renderPrescription();
+};
+
+  modalCancel.onclick = () => {
+    modalContainer.style.display = 'none';
+  };
+
+  // Button event bindings
+  document.querySelector('.btnAddCO').onclick = () => openModal('C/O');
+  document.querySelector('.btnAddHO').onclick = () => openModal('H/O');
+  document.querySelector('.btnAddOE').onclick = () => openModal('O/E');
+  document.querySelector('.btnAddDiagnosis').onclick = () => openModal('Diagnosis');
+  document.querySelector('.btnAddInvestigation').onclick = () => openModal('Investigation');
+  document.querySelector('.btnAddAdvice').onclick = () => openModal('Advice');
+  document.querySelector('.btnAddUpodesh').onclick = () => openModal('উপদেশ');
+  document.querySelector('.btnAddNextVisit').onclick = () => openModal('NextVisit');
+document.querySelector('.btnAddReferTo').onclick = () => openModal('Refer to');
+  // Medicines modal open on double click on prescription area or create a dedicated button
+  document.getElementById('prescriptionOutput').ondblclick = () => openModal('Medicines');
+
+  // Render Prescription Preview
+  function renderPrescription() {
+    const out = document.getElementById('prescriptionOutput');
+    if(!patientInfo.name) {
+      out.innerHTML = `<p style="color:#cc0000; font-weight:bold;">দয়া করে বাম পাশে Patient Information ফর্ম পূরণ করে Submit করুন।</p>`;
+      return;
+    }
+    let imgTag = '';
+    if(patientInfo.image){
+      imgTag = `<img src="${patientInfo.image}" alt="Patient Image" style="max-width:80px; max-height:80px; border-radius:6px; float:right; margin-left:8px;">`;
+    }
+
+    // Build Medicine Table
+    let medTable = `<table>
+      <thead><tr>
+        <th>ক্রমিক</th>
+        <th>ব্র্যান্ড নাম</th>
+		<th>স্ট্রেন্থ</th>
+        <th>জেনেরিক নাম</th>
+        <th>ডোজ</th>
+        <th>কতদিন খাবেন</th>
+		 <th>রিমার্ক</th>
+      </tr></thead><tbody>`;
+    prescriptionData.medicines.forEach((med,i)=>{
+      if(med.brand || med.strenth || med.generic || med.dose || med.duration || med.remark) {
+        medTable += `<tr>
+          <td>${i+1}</td>
+          <td>${med.brand || ''}</td>
+		  <td>${med.strenth || ''}</td>
+          <td>${med.generic || ''}</td>
+          <td>${med.dose || ''}</td>
+          <td>${med.duration || ''}</td>
+		  <td>${med.remark || ''}</td>
+        </tr>`;
+      }
+    });
+    medTable += '</tbody></table>';
+    // Other sections output (comma separated)
+    function arrToStr(arr) {
+      return arr.length > 0 ? arr.join(', ') : '-';
+    }
+
+    out.innerHTML = `
+      <div class="header-section">
+        <div class="left">
+          Md. Farhad Hossain<br/>
+         Pharmacist  <br/>
+		Northern University Bangladesh (NUB) <br/>
+		M.Pharm (Jagannath University Bangladesh) <br/>
+        </div>
+        <div class="right">
+          মো: ফরহাদ হোসাইন<br/>
+          ফার্মাসিস্ট <br/>
+		  নর্দার্ন ইউনিভার্সিটি বাংলাদেশ <br/>
+		  এম.ফার্ম (জগন্নাথ বিশ্ববিদ্যালয় বাংলাদেশ) <br/>
+        </div>
+      </div>
+
+     <div style="margin-bottom:8px; font-weight:bold; font-size:14px;">
+  Patient ID: ${patientInfo.pId} | Name: ${patientInfo.name} (Age: ${patientInfo.age}) | Phone: ${patientInfo.phone || '-'} | Gender: ${patientInfo.gender || '-'} | Date: ${patientInfo.date} | Time: ${patientInfo.time}
+</div>
+      <div style="margin-bottom:10px;">District: ${patientInfo.district || '-'} | Thana: ${patientInfo.thana || '-'} | Address: ${patientInfo.address || '-'}</div>
+      ${imgTag}
+      <div class="section-row">
+        <div class="section-box"><strong>C/O:</strong> ${arrToStr(prescriptionData.selectedCO)}</div>
+        <div class="section-box"><strong>H/O:</strong> ${arrToStr(prescriptionData.selectedHO)}</div>
+        <div class="section-box"><strong>O/E:</strong> ${arrToStr(prescriptionData.selectedOE)}</div>
+      </div>
+      <div class="section-row">
+        <div class="section-box"><strong>Diagnosis:</strong> ${arrToStr(prescriptionData.selectedDiagnosis)}</div>
+        <div class="section-box"><strong>Investigation:</strong> ${arrToStr(prescriptionData.selectedInvestigation)}</div>
+      </div>
+      <div class="medicines">
+        <h4>Medicines</h4>
+        ${medTable}
+      </div>
+      <div class="section-row" style="margin-bottom:14px;">
+        <div><strong>Advice:</strong> ${arrToStr(prescriptionData.selectedAdvice)}</div>
+      </div>
+      <div class="section-row" style="margin-bottom:14px;">
+        <div><strong>উপদেশ:</strong> ${arrToStr(prescriptionData.selectedUpodesh)}</div>
+      </div>
+      <div class="section-row" style="margin-bottom:14px;">
+        <div><strong>Refer to:</strong> ${prescriptionData.selectedReferTo || '-'}</div>
+      </div>
+	  <div class="section-row" style="margin-bottom:14px;">
+  <div><strong>Next Visit:</strong> ${prescriptionData.selectedNextVisit || '-'}</div>
+</div>
+      <div class="signature">Dr. Md. Farhad Hossain</div>
+    `;
+  }
+  // Save all data to localStorage for History
+  function savePrescription() {
+    if(!patientInfo.name) {
+      alert('Patient Info আগে Save করুন!');
+      return;
+    }
+    // Build one object
+    const saveObj = {
+      patientInfo,
+      prescriptionData: JSON.parse(JSON.stringify(prescriptionData)),
+      timestamp: new Date().toISOString()
+    };
+
+   let history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+history.push(saveObj);
+localStorage.setItem('prescriptionHistory', JSON.stringify(history));
+
+    alert('Prescription saved to History!');
+    renderHistory();
+  }
+
+  document.getElementById('btnSaveAll').onclick = savePrescription;
+
+  // Print Prescription
+  document.getElementById('btnPrint').onclick = () => {
+    if(!patientInfo.name) {
+      alert('Patient Info আগে Submit করুন!');
+      return;
+    }
+    const printContents = document.getElementById('prescriptionOutput').innerHTML;
+   const printWindow = window.open('', '', 'width=1050,height=800');
+   printWindow.document.write('<html><head><title>প্রেসক্রিপশন প্রিন্ট</title>');
+   printWindow.document.write('<style>@media print {@page { size: 8.5in 14in; margin: 1cm; }}');
+   printWindow.document.write(`
+  body {
+    font-family: Kalpurush, Arial, sans-serif;
+    padding: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 6px;
+  }
+  .header-section {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+  #prescriptionOutput {
+    position: relative;
+    min-height: 950px;
+    padding-bottom: 60px;
+  }
+  .signature {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-weight: bold;
+    border-top: 1px solid #000;
+    padding-top: 5px;
+    width: 300px;
+    text-align: right;
+    line-height: 1.4;
+  }
+</style>`);
+printWindow.document.write('</head><body>');
+printWindow.document.write(printContents);
+printWindow.document.write('</body></html>');
+printWindow.document.close();
+printWindow.focus();
+printWindow.print();
+printWindow.close();
+
+  };
+
+ function renderHistory() {
+  document.getElementById('historySearchBtn').onclick = function() {
+  const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
+  if (!query) return;
+
+  const history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  const filtered = history.filter(item => item.patientInfo?.pName?.toLowerCase().includes(query));
+  renderHistory(filtered);
+};
+document.getElementById('historyClearBtn').onclick = function() {
+  document.getElementById('historySearchInput').value = '';
+  renderHistory(); // সব রেকর্ড দেখাবে
+};
+  const history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  const historyBody = document.getElementById('historyBody');
+  historyBody.innerHTML = '';
+
+  history.forEach((item, idx) => {
+    const p = item.patientInfo || {};
+    const date = new Date(item.timestamp).toLocaleString('bn-BD');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.name || '-'}</td>
+      <td>${p.age || '-'}</td>
+      <td>${date}</td>
+      <td>
+        <span class="action-btn" title="Edit" data-idx="${idx}" data-action="edit">&#9998;</span>
+        <span class="action-btn" title="Delete" data-idx="${idx}" data-action="delete">&#10060;</span>
+        <span class="action-btn" title="Print" data-idx="${idx}" data-action="print">&#128424;</span>
+      </td>
+    `;
+    historyBody.appendChild(tr);
+  });
+  // Action buttons
+  historyBody.querySelectorAll('.action-btn').forEach(btn => {
+    btn.onclick = () => {
+      const idx = btn.getAttribute('data-idx');
+      const action = btn.getAttribute('data-action');
+      let history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+
+      if (action === 'edit') {
+        if (confirm('এই ডাটা এডিট করতে চান? বর্তমান ফরমের ডাটা হারাতে পারে।')) {
+          const data = history[idx];
+          patientInfo = data.patientInfo;
+          Object.assign(prescriptionData, data.prescriptionData);
+          fillPatientForm(patientInfo);
+          renderPrescription();
+          alert('ফরম আপডেট করা হয়েছে।');
+        }
+      } else if (action === 'delete') {
+        if (confirm('এই রেকর্ডটি মুছে ফেলতে চান?')) {
+          history.splice(idx, 1);
+          localStorage.setItem('prescriptionHistory', JSON.stringify(history));
+          renderHistory();
+        }
+      } else if (action === 'print') {
+        const data = history[idx];
+        patientInfo = data.patientInfo;
+        Object.assign(prescriptionData, data.prescriptionData);
+        fillPatientForm(patientInfo);
+        renderPrescription();
+        document.getElementById('btnPrint').click();
+      }
+    };
+  });
+}
+  function fillPatientForm(data) {
+    patientForm.pName.value = data.name || '';
+    patientForm.pAge.value = data.age || '';
+    patientForm.pPhone.value = data.phone || '';
+    patientForm.pGender.value = data.gender || '';
+    patientForm.pAddress.value = data.address || '';
+    patientForm.pDate.value = data.date || '';
+    patientForm.pDistrict.value = data.district || '';
+    // Trigger thana load
+    districtSelect.dispatchEvent(new Event('change'));
+    patientForm.pThana.value = data.thana || '';
+    patientForm.pEmail.value = data.email || '';
+    patientForm.pRefBy.value = data.refBy || '';
+    patientForm.pTime.value = data.time || '';
+    // Image not reloaded for simplicity
+  }
+  // Appointment button click (show alert for demo)
+  document.getElementById('btnAppointment').onclick = () => {
+    alert('Appointment ফিচার শীঘ্রই যুক্ত করা হবে। বর্তমানে Patient Info ফর্ম ব্যাবহার করুন।');
+  };
+  // Prescription button click - scroll to prescription section
+  document.getElementById('btnPrescription').onclick = () => {
+    document.getElementById('prescriptionOutput').scrollIntoView({behavior:'smooth'});
+  };
+  // Initialize with message
+  renderPrescription();
+// Patient ID অটো জেনারেট করার ফাংশন
+function generatePatientId() {
+  let history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  let maxIdNum = 0;
+  history.forEach(item => {
+    const pid = item.patientInfo?.pId || '';
+    const num = parseInt(pid.replace(/[^\d]/g, ''), 10);
+    if (num > maxIdNum) maxIdNum = num;
+  });
+  return 'P' + String(maxIdNum + 1).padStart(3, '0');  // যেমন P001, P002...
+}
+window.addEventListener('DOMContentLoaded', () => {
+  if (!patientForm.pId.value) {
+    patientForm.pId.value = generatePatientId();
+  }
+});
+document.getElementById('clearPatientForm').onclick = () => {
+  if (confirm("ফর্মের সব তথ্য মুছে ফেলতে চান?")) {
+    patientForm.reset();
+    patientInfo = {};
+    document.getElementById('pId').value = generatePatientId(); // নতুন ID বসবে
+    updateTime(); // টাইম ফিল্ডও আপডেট হবে
+    renderPrescription();
+  }
+};
+
+  function fillPatientForm(data) {
+    patientForm.pName.value = data.name || '';
+    patientForm.pAge.value = data.age || '';
+    patientForm.pPhone.value = data.phone || '';
+    patientForm.pGender.value = data.gender || '';
+    patientForm.pAddress.value = data.address || '';
+    patientForm.pDate.value = data.date || '';
+    patientForm.pDistrict.value = data.district || '';
+    // Trigger thana load
+    districtSelect.dispatchEvent(new Event('change'));
+    patientForm.pThana.value = data.thana || '';
+    patientForm.pEmail.value = data.email || '';
+    patientForm.pRefBy.value = data.refBy || '';
+    patientForm.pTime.value = data.time || '';
+    // Image not reloaded for simplicity
+  }
+  // Appointment button click (show alert for demo)
+  document.getElementById('btnAppointment').onclick = () => {
+    alert('Appointment ফিচার শীঘ্রই যুক্ত করা হবে। বর্তমানে Patient Info ফর্ম ব্যাবহার করুন।');
+  };
+  // Prescription button click - scroll to prescription section
+  document.getElementById('btnPrescription').onclick = () => {
+    document.getElementById('prescriptionOutput').scrollIntoView({behavior:'smooth'});
+  };
+  // Initialize with message
+  renderPrescription();
+// Patient ID অটো জেনারেট করার ফাংশন
+function generatePatientId() {
+  let history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  let maxIdNum = 0;
+  history.forEach(item => {
+    const pid = item.patientInfo?.pId || '';
+    const num = parseInt(pid.replace(/[^\d]/g, ''), 10);
+    if (num > maxIdNum) maxIdNum = num;
+  });
+  return 'P' + String(maxIdNum + 1).padStart(3, '0');  // যেমন P001, P002...
+}
+window.addEventListener('DOMContentLoaded', () => {
+  if (!patientForm.pId.value) {
+    patientForm.pId.value = generatePatientId();
+  }
+});
+document.getElementById('clearPatientForm').onclick = () => {
+  if (confirm("ফর্মের সব তথ্য মুছে ফেলতে চান?")) {
+    patientForm.reset();
+    patientInfo = {};
+    document.getElementById('pId').value = generatePatientId(); // নতুন ID বসবে
+    updateTime(); // টাইম ফিল্ডও আপডেট হবে
+    renderPrescription();
+  }
+};
+// Show History Section on History Button click
+document.getElementById('btnHistory').onclick = () => {
+  renderHistory();
+  document.getElementById('historySection').style.display = 'block';
+};
+
+// Close History Section
+document.getElementById('closeHistory').onclick = () => {
+  document.getElementById('historySection').style.display = 'none';
+};
+
+// Search History by Patient Name
+document.getElementById('historySearchBtn').onclick = () => {
+  const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
+  if (!query) return;
+  const history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  const filtered = history.filter(item => item.patientInfo?.name?.toLowerCase().includes(query));
+  renderHistory(filtered);
+};
+
+// Clear Search and Show All
+document.getElementById('historyClearBtn').onclick = () => {
+  document.getElementById('historySearchInput').value = '';
+  renderHistory();
+};
+
+// Render History Table Rows
+function renderHistory(filteredHistory) {
+  const history = filteredHistory || JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+  const historyBody = document.getElementById('historyBody');
+  historyBody.innerHTML = '';
+
+  if(history.length === 0) {
+    historyBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:10px;">কোনো রেকর্ড পাওয়া যায়নি</td></tr>`;
+    return;
+  }
+
+  history.forEach((item, idx) => {
+    const p = item.patientInfo || {};
+    const date = item.timestamp ? new Date(item.timestamp).toLocaleString('bn-BD') : '-';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:8px; border:1px solid #ccc;">${p.name || '-'}</td>
+      <td style="padding:8px; border:1px solid #ccc;">${p.age || '-'}</td>
+      <td style="padding:8px; border:1px solid #ccc;">${date}</td>
+      <td style="padding:8px; border:1px solid #ccc; text-align:center;">
+        <button class="action-btn" title="Edit" data-idx="${idx}" data-action="edit" style="margin-right:5px;">✏️</button>
+        <button class="action-btn" title="Delete" data-idx="${idx}" data-action="delete" style="margin-right:5px;">🗑️</button>
+        <button class="action-btn" title="Print" data-idx="${idx}" data-action="print">🖨️</button>
+      </td>
+    `;
+    historyBody.appendChild(tr);
+  });
+
+  // Action buttons event handlers
+  historyBody.querySelectorAll('.action-btn').forEach(btn => {
+    btn.onclick = () => {
+      const idx = btn.getAttribute('data-idx');
+      const action = btn.getAttribute('data-action');
+      let history = JSON.parse(localStorage.getItem('prescriptionHistory') || '[]');
+
+      if(action === 'edit') {
+        if(confirm('এই ডাটা এডিট করতে চান? বর্তমান ফরমের ডাটা হারাতে পারে।')) {
+          const data = history[idx];
+          patientInfo = data.patientInfo;
+          Object.assign(prescriptionData, data.prescriptionData);
+          fillPatientForm(patientInfo);
+          renderPrescription();
+          alert('ফরম আপডেট করা হয়েছে।');
+          document.getElementById('historySection').style.display = 'none'; // Hide history after edit
+        }
+      } 
+      else if(action === 'delete') {
+        if(confirm('এই রেকর্ডটি মুছে ফেলতে চান?')) {
+          history.splice(idx, 1);
+          localStorage.setItem('prescriptionHistory', JSON.stringify(history));
+          renderHistory();
+        }
+      } 
+      else if(action === 'print') {
+        const data = history[idx];
+        patientInfo = data.patientInfo;
+        Object.assign(prescriptionData, data.prescriptionData);
+        fillPatientForm(patientInfo);
+        renderPrescription();
+        document.getElementById('btnPrint').click();
+      }
+    };
+  });
+}
+// License Expiry Lock
+(function(){
+  const expiry = new Date("2025-08-26");
+  const today = new Date();
+  if(today > expiry){
+    document.body.innerHTML = `
+      <div style="text-align:center;margin-top:100px;">
+        <h2>লাইসেন্সের সময়সীমা শেষ হয়েছে</h2>
+        <p>আপনার সফটওয়্যার আপডেট করতে অনুগ্রহ করে নির্মাতার সাথে যোগাযোগ করুন।</p>
+        <p>যোগাযোগ: 01325888301</p>
+      </div>
+    `;
+    throw new Error("License Expired");
+  }
+})();
+</script>
+
+<div style="text-align:center; font-size:12px; color:#999; margin-top:20px;">
+ <span style="font-weight:bold; color:red;">  © 2025 Md. Farhad Hossain. All rights reserved. | Contact: 01325888301</span> 
+</div>
+
+<script>
+// License Lock System
+const allowedUser = "f";
+const allowedKey = "1";
+
+// শুধুমাত্র একবার ইনপুট নেওয়া হচ্ছে
+const nameInput = prompt("আপনার নাম লিখুন:");
+const keyInput = prompt("লাইসেন্স কী লিখুন:");
+
+if (!nameInput || !keyInput) {
+  document.body.innerHTML = "<h1 style='color:red;text-align:center;padding-top:100px'>লাইসেন্স বাতিল করা হয়েছে। সফটওয়্যার বন্ধ।</h1>";
+  throw new Error("License Cancelled");
+}
+
+// এখানেই lowercase করা হচ্ছে
+const currentUser = nameInput.toLowerCase();
+const licenseKey = keyInput;
+
+if (currentUser !== allowedUser || licenseKey !== allowedKey) {
+  document.body.innerHTML = "<h1 style='color:red;text-align:center;padding-top:100px'>লাইসেন্স ভুল! সফটওয়্যার বন্ধ- অনুগ্রহ করে যোগাযোগ করুনঃ ০১৩২৫৮৮৮৩০১</h1>";
+  throw new Error("License Error");
+}
+
+</script>
+</body>
+</html>
